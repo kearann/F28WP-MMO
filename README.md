@@ -1,2 +1,8 @@
 # F28WP-MMO
-# F28WP-MMO
+
+## Group
+
+- Cameron
+- Ryan
+- Kearan
+- 
