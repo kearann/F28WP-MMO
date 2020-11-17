@@ -278,18 +278,19 @@ function MyObject (xx, yy, clientWidth, clientHeight, img, type) {
 
 /* adds water objects to objectBlocks stack */
 
-objectBlocks.push( new MyObject(-20,   -20, clientWidth+40, 40, './imgs/water.png','water') );
-objectBlocks.push( new MyObject(-20, clientHeight-20, clientWidth+40, 40, './imgs/water.png','water') );
-objectBlocks.push( new MyObject(-20,   -20, 40,    clientHeight+40, './imgs/water.png','water') );
-objectBlocks.push( new MyObject(200,   100, 70,    clientHeight-400, './imgs/wall.png','water') );	
-objectBlocks.push( new MyObject(800,   20, 70,    clientHeight-500, './imgs/water.png','water') );
-objectBlocks.push( new MyObject(800,   500, 70,    clientHeight-200, './imgs/water.png','water') );
-objectBlocks.push( new MyObject(clientWidth-20,   -20, 40,    clientHeight+40, './imgs/water.png','water') );
+objectBlocks.push( new MyObject(-20,   -15, clientWidth+70, 50, './imgs/tWater.png','water') ); //top water
+objectBlocks.push( new MyObject(-20, clientHeight-29, clientWidth+70, 50, './imgs/bwater.png','water') ); // bottom water
+objectBlocks.push( new MyObject(-50,   27, 100,    clientHeight-47, './imgs/water.png','water') ); // left water
+objectBlocks.push( new MyObject(clientWidth-30,   27, 70,    clientHeight-47, './imgs/water.png','water') ); // right water
+objectBlocks.push( new MyObject(200,   200, 143,    clientHeight-440, './imgs/wall.png','water') );	//wall 
+objectBlocks.push( new MyObject(800,   27, 95,    clientHeight-500, './imgs/water.png','water') );// Tmiddle water
+objectBlocks.push( new MyObject(800,   500, 95,    clientHeight-520, './imgs/water.png','water') );// Bmiddle water
+
 for (var i=0; i<3; ++i){
-	objectBlocks.push( new MyObject(getRandomIntInclusive(50, document.body.clientWidth-50),   getRandomIntInclusive(50, document.body.clientHeight-50 ), 60, 40, './imgs/med.png','med') );
+	objectBlocks.push( new MyObject(getRandomIntInclusive(50, document.body.clientWidth-50),   getRandomIntInclusive(50, document.body.clientHeight-50 ), 48, 48, './imgs/Cheese.png','med') );
 }
 for (var i=0; i<5; ++i){
-	objectBlocks.push( new MyObject(getRandomIntInclusive(50, document.body.clientWidth-50),   getRandomIntInclusive(50, document.body.clientHeight-50 ), 40, 40, './imgs/coin.png','coin') );
+	objectBlocks.push( new MyObject(getRandomIntInclusive(50, document.body.clientWidth-50),   getRandomIntInclusive(50, document.body.clientHeight-50 ), 54, 48, './imgs/coin.png','coin') ); //36 /32
 }
 
 
