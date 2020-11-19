@@ -73,11 +73,11 @@ function keyDown(e) {
 	
 	var steps = 10;
 	var obj = document.getElementById( player.id );
-    if (e && e.keyCode == '38') { object.y -= steps; obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat"; player.direction = 0;} // up arrow  
+    if (e && e.keyCode == '38') { object.y -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat"; player.direction = 0;} // up arrow  
     if (e && e.keyCode == '40') { object.y += steps;obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat"; player.direction = 180; } // down arrow
     if (e && e.keyCode == '37') { object.x -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat";player.direction = 270;} // left arrow
     if (e && e.keyCode == '39') { object.x += steps; obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat";player.direction = 90;} // right arrow
-	if (e && e.keyCode == '32') {id=new bullet(player.pos.x+30, player.pos.y+35, 10, 20, './imgs/bullet.png',player.direction); id.moveBullet();} // up arrow
+	if (e && e.keyCode == '32') {id=new bullet(player.pos.x+30, player.pos.y+35, 30, 30, './imgs/arrow.png',player.direction); id.moveBullet();} // up arrow
 	if (e && e.keyCode == '27') { // esc key
 		showPopup(pause); 
 	}
@@ -512,10 +512,13 @@ objectBlocks.push( new MyObject(-20,   -15, clientWidth+70, 50, './imgs/tWater.p
 objectBlocks.push( new MyObject(-20, clientHeight-29, clientWidth+70, 50, './imgs/bwater.png','water') ); // bottom water
 objectBlocks.push( new MyObject(-50,   27, 100,    clientHeight-47, './imgs/water.png','water') ); // left water
 objectBlocks.push( new MyObject(clientWidth-30,   27, 70,    clientHeight-47, './imgs/water.png','water') ); // right water
-objectBlocks.push( new MyObject(200,   200, 143,    clientHeight-440, './imgs/wall.png','water') );	//wall 
+objectBlocks.push( new MyObject(200,   200, 143,    clientHeight-440, './imgs/wall.png','wall') );	//wall 
 objectBlocks.push( new MyObject(800,   27, 95,    clientHeight-500, './imgs/water.png','water') );// Tmiddle water
 objectBlocks.push( new MyObject(800,   500, 95,    clientHeight-520, './imgs/water.png','water') );// Bmiddle water
-
+objectBlocks.push( new MyObject(818,   800, 63,    clientHeight-100, './imgs/waterB.png','water') );
+objectBlocks.push( new MyObject(818,   10, 63,    clientHeight-800, './imgs/waterB.png','water') );
+objectBlocks.push( new MyObject(-35,   10, 63,    clientHeight-10, './imgs/waterB.png','water') );
+objectBlocks.push( new MyObject(clientWidth-10,   10, 63,    clientHeight-10, './imgs/waterB.png','water') );
 for (var i=0; i<3; ++i){
 	objectBlocks.push( new MyObject(getRandomIntInclusive(50, document.body.clientWidth-50),   getRandomIntInclusive(50, document.body.clientHeight-50 ), 48, 48, './imgs/Cheese.png','med') );
 }
