@@ -31,23 +31,6 @@ document.onkeydown = keyDown;
 
 
 
-/* 
-
-*******************************ADDED CODE*********************************
-
-*/
-
-
-
-
-
-
-/*
-
-*******************************ADDED CODE*********************************
-*/
-
-
 
 
 
@@ -123,8 +106,6 @@ function keyDown(e) {
 document.documentElement.style.overflow = 'hidden';  // firefox, chrome
 document.body.scroll = "no"; // ie only
 
-//***START OF ADDED CODE***
-
 function loopObjects(){
 	for (var ii=0; ii<objectBlocks.length; ii++)
 	{	
@@ -164,8 +145,6 @@ function getData(){
 	
 }
 
-//***END OF ADDED CODE***
-
 
 
 
@@ -183,7 +162,6 @@ function showPopup( str )
 	dd.className = "show";	//changes the class of the menu container so it is no longer hidden
 }
 
-//***New Code***
 function closePopup(all)
 {
 	i=1;
@@ -240,7 +218,7 @@ var help = `
 	</div>
 `;
 
-//***new code***
+
 var form1 =  `<div class="buttonContainer" style="top:110px;">
 			<form name="username" action="*.php" onsubmit="getData();closePopup(1);" >
   <input class="button" style="width:100%;" type="text" id="uName" name="uName" autofocus placeholder="Enter Username">
@@ -282,7 +260,6 @@ var clientWidth = document.body.clientWidth;
 
 
 
-////////START NEW CODE///////
 
 var bulletId = 0;	//variable to hold the next new ID number
 function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
@@ -330,7 +307,7 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 		}
 		else if (this.angle==270){
 			for (var i=0; i<objectBlocks.length;i++){
-				if(((objectBlocks[i].pos.x + parseInt(objectBlocks[i].div.style.width))  < this.pos.x) && (objectBlocks[i].pos.y <= this.pos.y+20) && (objectBlocks[i].pos.y + parseInt(objectBlocks[i].div.style.height)>= this.pos.y+20)&& (closest==null ||((objectBlocks[i].pos.x +parseInt(objectBlocks[i].div.style.width))- this.pos.x > closest))&&(objectBlocks[i].type=='water')){
+				if(((objectBlocks[i].pos.x + parseInt(objectBlocks[i].div.style.width))  < this.pos.x) && (objectBlocks[i].pos.y <= this.pos.y+20) && (objectBlocks[i].pos.y + parseInt(objectBlocks[i].div.style.height)>= this.pos.y+20)&& (closest==null ||((objectBlocks[i].pos.x +parseInt(objectBlocks[i].div.style.width))- this.pos.x > closest))&&(objectBlocks[i].type=='water' || objectBlocks[i].type=='wall')){
 					closest=objectBlocks[i].pos.x +parseInt(objectBlocks[i].div.style.width)- this.pos.x +5;
 				}
 			}
@@ -380,7 +357,6 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 	
 	this.update();
 }
-////////END NEW CODE///////
 
 
 
