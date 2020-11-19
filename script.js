@@ -31,6 +31,23 @@ document.onkeydown = keyDown;
 
 
 
+/* 
+
+*******************************ADDED CODE*********************************
+
+*/
+
+
+
+
+
+
+/*
+
+*******************************ADDED CODE*********************************
+*/
+
+
 
 
 
@@ -106,11 +123,13 @@ function keyDown(e) {
 document.documentElement.style.overflow = 'hidden';  // firefox, chrome
 document.body.scroll = "no"; // ie only
 
+//***START OF ADDED CODE***
+
 function loopObjects(){
 	for (var ii=0; ii<objectBlocks.length; ii++)
 	{	
 		var div = document.getElementById(objectBlocks[ii].id); 
-		if(objectBlocks[ii].type!='water'){
+		if(objectBlocks[ii].type!='block'){
 			div=moveDiv(false,div,ii);	//Calls function that will move the div to new location
 		}
 	}
@@ -145,6 +164,8 @@ function getData(){
 	
 }
 
+//***END OF ADDED CODE***
+
 
 
 
@@ -162,6 +183,7 @@ function showPopup( str )
 	dd.className = "show";	//changes the class of the menu container so it is no longer hidden
 }
 
+//***New Code***
 function closePopup(all)
 {
 	i=1;
@@ -218,7 +240,7 @@ var help = `
 	</div>
 `;
 
-
+//***new code***
 var form1 =  `<div class="buttonContainer" style="top:110px;">
 			<form name="username" action="*.php" onsubmit="getData();closePopup(1);" >
   <input class="button" style="width:100%;" type="text" id="uName" name="uName" autofocus placeholder="Enter Username">
@@ -260,6 +282,7 @@ var clientWidth = document.body.clientWidth;
 
 
 
+////////START NEW CODE///////
 
 var bulletId = 0;	//variable to hold the next new ID number
 function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
@@ -278,12 +301,11 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 	}
 	
 	this.moveBullet = function() {
-		//window.alert(this.id);
 		var axis =null;
 		var closest=null;
 		if (this.angle==0){
 			for (var i=0; i<objectBlocks.length;i++){
-				if(((objectBlocks[i].pos.y + parseInt(objectBlocks[i].div.style.height)) < this.pos.y) && (objectBlocks[i].pos.x <= this.pos.x+20) && (objectBlocks[i].pos.x + parseInt(objectBlocks[i].div.style.width)>= this.pos.x+20)&& (closest==null ||((objectBlocks[i].pos.y +parseInt(objectBlocks[i].div.style.height))- this.pos.y > closest))&&(objectBlocks[i].type=='water')){
+				if(((objectBlocks[i].pos.y + parseInt(objectBlocks[i].div.style.height)) < this.pos.y) && (objectBlocks[i].pos.x <= this.pos.x+20) && (objectBlocks[i].pos.x + parseInt(objectBlocks[i].div.style.width)>= this.pos.x+20)&& (closest==null ||((objectBlocks[i].pos.y +parseInt(objectBlocks[i].div.style.height))- this.pos.y > closest))&&(objectBlocks[i].type=='block')){
 					closest=(objectBlocks[i].pos.y +parseInt(objectBlocks[i].div.style.height))- this.pos.y+5;
 				}
 			}
@@ -291,7 +313,7 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 		} 
 		else if (this.angle==180){
 			for (var i=0; i<objectBlocks.length;i++){
-				if((objectBlocks[i].pos.y  > (this.pos.y+parseInt(this.div.style.height))) && (objectBlocks[i].pos.x <= this.pos.x+20) && (objectBlocks[i].pos.x + parseInt(objectBlocks[i].div.style.width)>= this.pos.x+20)&& (closest==null ||(objectBlocks[i].pos.y- (this.pos.y +parseInt(this.div.style.height)) < closest))&&(objectBlocks[i].type=='water')){
+				if((objectBlocks[i].pos.y  > (this.pos.y+parseInt(this.div.style.height))) && (objectBlocks[i].pos.x <= this.pos.x+20) && (objectBlocks[i].pos.x + parseInt(objectBlocks[i].div.style.width)>= this.pos.x+20)&& (closest==null ||(objectBlocks[i].pos.y- (this.pos.y +parseInt(this.div.style.height)) < closest))&&(objectBlocks[i].type=='block')){
 					closest=objectBlocks[i].pos.y - (this.pos.y +parseInt(this.div.style.height))+5;
 				}
 			}
@@ -299,7 +321,7 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 		}
 		else if (this.angle==90){
 			for (var i=0; i<objectBlocks.length;i++){
-				if((objectBlocks[i].pos.x  > (this.pos.x+parseInt(this.div.style.width))) && (objectBlocks[i].pos.y <= this.pos.y+20) && (objectBlocks[i].pos.y + parseInt(objectBlocks[i].div.style.height)>= this.pos.y+20)&& (closest==null ||(objectBlocks[i].pos.x- (this.pos.x +parseInt(this.div.style.width)) < closest))&&(objectBlocks[i].type=='water')){
+				if((objectBlocks[i].pos.x  > (this.pos.x+parseInt(this.div.style.width))) && (objectBlocks[i].pos.y <= this.pos.y+20) && (objectBlocks[i].pos.y + parseInt(objectBlocks[i].div.style.height)>= this.pos.y+20)&& (closest==null ||(objectBlocks[i].pos.x- (this.pos.x +parseInt(this.div.style.width)) < closest))&&(objectBlocks[i].type=='block')){
 					closest=objectBlocks[i].pos.x - (this.pos.x +parseInt(this.div.style.width))+5;
 				}
 			}
@@ -307,7 +329,7 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 		}
 		else if (this.angle==270){
 			for (var i=0; i<objectBlocks.length;i++){
-				if(((objectBlocks[i].pos.x + parseInt(objectBlocks[i].div.style.width))  < this.pos.x) && (objectBlocks[i].pos.y <= this.pos.y+20) && (objectBlocks[i].pos.y + parseInt(objectBlocks[i].div.style.height)>= this.pos.y+20)&& (closest==null ||((objectBlocks[i].pos.x +parseInt(objectBlocks[i].div.style.width))- this.pos.x > closest))&&(objectBlocks[i].type=='water' || objectBlocks[i].type=='wall')){
+				if(((objectBlocks[i].pos.x + parseInt(objectBlocks[i].div.style.width))  < this.pos.x) && (objectBlocks[i].pos.y <= this.pos.y+20) && (objectBlocks[i].pos.y + parseInt(objectBlocks[i].div.style.height)>= this.pos.y+20)&& (closest==null ||((objectBlocks[i].pos.x +parseInt(objectBlocks[i].div.style.width))- this.pos.x > closest))&&(objectBlocks[i].type=='block')){
 					closest=objectBlocks[i].pos.x +parseInt(objectBlocks[i].div.style.width)- this.pos.x +5;
 				}
 			}
@@ -357,6 +379,7 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 	
 	this.update();
 }
+////////END NEW CODE///////
 
 
 
@@ -408,7 +431,7 @@ function MyObject (xx, yy, clientWidth, clientHeight, img, type) {
 			
 		if ( Math.abs(yDiff) < Math.abs(ySize)  && Math.abs(xDiff) < Math.abs(xSize) )
 		{
-			if (this.type=='water' && type!='water'){
+			if (this.type=='block' && type!='block'){
 				return true; // Collision detected
 			}
 					
@@ -442,7 +465,7 @@ function MyObject (xx, yy, clientWidth, clientHeight, img, type) {
 		if ( Math.abs(yDiff) < Math.abs(ySize)  && 
   		     Math.abs(xDiff) < Math.abs(xSize) )
 		{
-			if (this.type=='water'){
+			if (this.type=='block'){
 				player.pos.y = player.prev.y;	//if user collides with water stop them from moving further
 				player.pos.x = player.prev.x;
 			}
@@ -484,17 +507,17 @@ function MyObject (xx, yy, clientWidth, clientHeight, img, type) {
 
 /* adds water objects to objectBlocks stack */
 
-objectBlocks.push( new MyObject(-20,   -15, clientWidth+70, 50, './imgs/tWater.png','water') ); //top water
-objectBlocks.push( new MyObject(-20, clientHeight-29, clientWidth+70, 50, './imgs/bwater.png','water') ); // bottom water
-objectBlocks.push( new MyObject(-50,   27, 100,    clientHeight-47, './imgs/water.png','water') ); // left water
-objectBlocks.push( new MyObject(clientWidth-30,   27, 70,    clientHeight-47, './imgs/water.png','water') ); // right water
-objectBlocks.push( new MyObject(200,   200, 143,    clientHeight-440, './imgs/wall.png','wall') );	//wall 
-objectBlocks.push( new MyObject(800,   27, 95,    clientHeight-500, './imgs/water.png','water') );// Tmiddle water
-objectBlocks.push( new MyObject(800,   500, 95,    clientHeight-520, './imgs/water.png','water') );// Bmiddle water
-objectBlocks.push( new MyObject(818,   800, 63,    clientHeight-100, './imgs/waterB.png','water') );
-objectBlocks.push( new MyObject(818,   10, 63,    clientHeight-800, './imgs/waterB.png','water') );
-objectBlocks.push( new MyObject(-35,   10, 63,    clientHeight-10, './imgs/waterB.png','water') );
-objectBlocks.push( new MyObject(clientWidth-10,   10, 63,    clientHeight-10, './imgs/waterB.png','water') );
+objectBlocks.push( new MyObject(-20,   -15, clientWidth+70, 50, './imgs/tWater.png','block') ); //top water
+objectBlocks.push( new MyObject(-20, clientHeight-29, clientWidth+70, 50, './imgs/bwater.png','block') ); // bottom water
+objectBlocks.push( new MyObject(-50,   27, 100,    clientHeight-47, './imgs/water.png','block') ); // left water
+objectBlocks.push( new MyObject(clientWidth-30,   27, 70,    clientHeight-47, './imgs/water.png','block') ); // right water
+objectBlocks.push( new MyObject(200,   200, 143,    clientHeight-440, './imgs/wall.png','block') );	//wall 
+objectBlocks.push( new MyObject(800,   27, 95,    clientHeight-500, './imgs/water.png','block') );// Tmiddle water
+objectBlocks.push( new MyObject(800,   500, 95,    clientHeight-520, './imgs/water.png','block') );// Bmiddle water
+objectBlocks.push( new MyObject(818,   800, 63,    clientHeight-100, './imgs/waterB.png','block') );
+objectBlocks.push( new MyObject(818,   10, 63,    clientHeight-800, './imgs/waterB.png','block') );
+objectBlocks.push( new MyObject(-35,   10, 63,    clientHeight-10, './imgs/waterB.png','block') );
+objectBlocks.push( new MyObject(clientWidth-10,   10, 63,    clientHeight-10, './imgs/waterB.png','block') );
 for (var i=0; i<3; ++i){
 	objectBlocks.push( new MyObject(getRandomIntInclusive(50, document.body.clientWidth-50),   getRandomIntInclusive(50, document.body.clientHeight-50 ), 48, 48, './imgs/Cheese.png','med') );
 }
