@@ -53,8 +53,9 @@ function keyDown(e) {
 	
 	var steps = 10;
 	var obj = document.getElementById( player.id );
-    if (e && e.keyCode == '38') { object.y -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat"; player.direction = 0;} // up arrow  
-    if (e && e.keyCode == '40') { object.y += steps;obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat"; player.direction = 180; } // down arrow
+	if (popupStack.length == 0){
+    if (e && e.keyCode == '38') { object.y -= steps; obj.style.background = "transparent url('imgs/up.png') 0 0 no-repeat"; player.direction = 0;} // up arrow  
+    if (e && e.keyCode == '40') { object.y += steps;obj.style.background = "transparent url('imgs/down.png') 0 0 no-repeat"; player.direction = 180; } // down arrow
     if (e && e.keyCode == '37') { object.x -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat";player.direction = 270;} // left arrow
     if (e && e.keyCode == '39') { object.x += steps; obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat";player.direction = 90;} // right arrow
 	if (e && e.keyCode == '32') {if (player.firing==false){callBulletMove();firingTrue();setTimeout(firingFalse, 500);}} // up arrow
@@ -97,7 +98,7 @@ function keyDown(e) {
 	obj.style.top  = player.pos.y + "px";
 	}
 	
-}
+}}
 
 function callBulletMove(){
 	id=new bullet(player.pos.x+30, player.pos.y+35, 30, 30, './imgs/arrow.png',player.direction); id.moveBullet();
