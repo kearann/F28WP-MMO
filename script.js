@@ -15,7 +15,8 @@ var player = {
 	direction: 90,
 	points: 0,
 	health: 100,
-	name:null
+	name:null,
+	firing:false
 }
 
 
@@ -26,27 +27,6 @@ player.size.y = document.getElementById("user").offsetHeight;
 
 
 document.onkeydown = keyDown;
-
-
-
-
-
-/* 
-
-*******************************ADDED CODE*********************************
-
-*/
-
-
-
-
-
-
-/*
-
-*******************************ADDED CODE*********************************
-*/
-
 
 
 
@@ -77,7 +57,7 @@ function keyDown(e) {
     if (e && e.keyCode == '40') { object.y += steps;obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat"; player.direction = 180; } // down arrow
     if (e && e.keyCode == '37') { object.x -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat";player.direction = 270;} // left arrow
     if (e && e.keyCode == '39') { object.x += steps; obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat";player.direction = 90;} // right arrow
-	if (e && e.keyCode == '32') {id=new bullet(player.pos.x+30, player.pos.y+35, 30, 30, './imgs/arrow.png',player.direction); id.moveBullet();} // up arrow
+	if (e && e.keyCode == '32') {if (player.firing==false){callBulletMove();firingTrue();setTimeout(firingFalse, 500);}} // up arrow
 	if (e && e.keyCode == '27') { // esc key
 		showPopup(pause); 
 	}
@@ -119,11 +99,21 @@ function keyDown(e) {
 	
 }
 
+function callBulletMove(){
+	id=new bullet(player.pos.x+30, player.pos.y+35, 30, 30, './imgs/arrow.png',player.direction); id.moveBullet();
+}
+function firingTrue() {
+  player.firing=true;
+}
+function firingFalse() {
+  player.firing=false;
+}
+
 // no scroll bars
 document.documentElement.style.overflow = 'hidden';  // firefox, chrome
 document.body.scroll = "no"; // ie only
 
-//***START OF ADDED CODE***
+
 
 function loopObjects(){
 	for (var ii=0; ii<objectBlocks.length; ii++)
@@ -164,7 +154,7 @@ function getData(){
 	
 }
 
-//***END OF ADDED CODE***
+
 
 
 
@@ -183,7 +173,6 @@ function showPopup( str )
 	dd.className = "show";	//changes the class of the menu container so it is no longer hidden
 }
 
-//***New Code***
 function closePopup(all)
 {
 	i=1;
@@ -279,11 +268,6 @@ var clientWidth = document.body.clientWidth;
 
 
 
-
-
-
-////////START NEW CODE///////
-
 var bulletId = 0;	//variable to hold the next new ID number
 function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 	this.id      = 'bulletids' + bulletId;	
@@ -342,7 +326,7 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 		var id = setInterval(frame, 5);
 		var obj = document.getElementById(this.id);
 		function frame() {
-			if (position == closest) {
+			if (position == closest || position >450 || position <-450) {
 				clearInterval(id);
 				obj.remove();
 			} 
