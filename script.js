@@ -10,7 +10,6 @@ var player = {
 	id: "user",
 	prev:{x:700, y:300}, 
 	pos: {x:700, y:300},
-	prev: {x:300, y:100},
 	size: {x:10, y:10},
 	direction: 90,
 	points: 0,
