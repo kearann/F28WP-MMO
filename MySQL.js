@@ -20,7 +20,7 @@ con.connect(function(err){
 		if(err) throw err;
 		console.log("USE users.")
 	});
-	var sql = "CREATE TABLE player (username varchar(255), prev_X int, prev_Y int, pos_X int, pos_Y int, direction int, points int, health int, IPAddress varchar(255))";
+	var sql = "CREATE TABLE IF NOT EXISTS player (username varchar(255), prev_X int, prev_Y int, pos_X int, pos_Y int, direction int, points int, health int, IPAddress varchar(255))";
 	con.query(sql, function(err, result){
 		if(err) throw err;
 		console.log("Player table created.")
