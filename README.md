@@ -6,3 +6,6 @@
 - Ryan
 - Kearann
 - Scott
+
+## How to Install and Run
+
