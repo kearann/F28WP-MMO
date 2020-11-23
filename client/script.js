@@ -23,7 +23,11 @@ var player = {
 
 /* Game loop */
 
+var frameRate = 60;
+setInterval(gameTick, 1000 / frameRate);
+function gameTick() {
 
+}
 
 
 
