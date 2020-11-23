@@ -54,10 +54,10 @@ function keyDown(e) {
 	var steps = 10;
 	var obj = document.getElementById( player.id );
 	if (popupStack.length == 0){
-    if (e && e.keyCode == '38') { object.y -= steps; obj.style.background = "transparent url('imgs/up.png') 0 0 no-repeat"; player.direction = 0;} // up arrow  
-    if (e && e.keyCode == '40') { object.y += steps;obj.style.background = "transparent url('imgs/down.png') 0 0 no-repeat"; player.direction = 180; } // down arrow
-    if (e && e.keyCode == '37') { object.x -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat";player.direction = 270;} // left arrow
-    if (e && e.keyCode == '39') { object.x += steps; obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat";player.direction = 90;} // right arrow
+    if (e && e.keyCode == '38') { object.y -= steps; obj.style.background = "transparent url('imgs/up.png') 0 0 no-repeat";obj.style.backgroundSize="300% 100%"; player.direction = 0;} // up arrow  
+    if (e && e.keyCode == '40') { object.y += steps;obj.style.background = "transparent url('imgs/down.png') 0 0 no-repeat";obj.style.backgroundSize="300% 100%"; player.direction = 180; } // down arrow
+    if (e && e.keyCode == '37') { object.x -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat";obj.style.backgroundSize="300% 100%";player.direction = 270;} // left arrow
+    if (e && e.keyCode == '39') { object.x += steps; obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat";obj.style.backgroundSize="300% 100%";player.direction = 90;} // right arrow
 	if (e && e.keyCode == '32') {if (player.firing==false){callBulletMove();firingTrue();setTimeout(firingFalse, 500);}} // up arrow
 	if (e && e.keyCode == '27') { // esc key
 		showPopup(pause); 
@@ -101,7 +101,7 @@ function keyDown(e) {
 }}
 
 function callBulletMove(){
-	id=new bullet(player.pos.x+30, player.pos.y+35, 30, 30, './imgs/arrow.png',player.direction); id.moveBullet();
+	id=new bullet(player.pos.x+clientWidth*0.025, player.pos.y+clientHeight*0.025, clientWidth*0.02, clientHeight*0.04, './imgs/arrow.png',player.direction); id.moveBullet();
 }
 function firingTrue() {
   player.firing=true;
@@ -127,7 +127,7 @@ function loopObjects(){
 }
 
 function moveDiv(moved,div,ii)
-{
+{	
 	if (moved){
 	div.style.left = getRandomIntInclusive(50, document.body.clientWidth-50)+"px";
 	div.style.top = getRandomIntInclusive(50, document.body.clientHeight-50)+"px";
@@ -327,7 +327,7 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 		var id = setInterval(frame, 5);
 		var obj = document.getElementById(this.id);
 		function frame() {
-			if (position == closest || position >450 || position <-450) {
+			if (Math.abs(position) >= (Math.abs(closest)) || position > clientHeight * 18|| position <-clientHeight*18) {
 				clearInterval(id);
 				obj.remove();
 			} 
@@ -357,6 +357,7 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 	this.div.style.top      = this.pos.y + "px";
 	this.div.style.zIndex   = -5;
 	this.div.style.backgroundImage = "url('"+img+"')";
+	this.div.style.backgroundSize = "100% 100%";
 	this.div.style.transform = "rotate("+this.angle+"deg)";
 	document.body.appendChild(this.div);
 	
@@ -375,7 +376,7 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 
 
 var newId = 0;	//variable to hold the next new ID number
-function MyObject (xx, yy, clientWidth, clientHeight, img, type) {
+function MyObject (xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 	this.id      = 'ids' + newId;	
 	this.pos     = {x:xx,  y:yy};
 	this.prevPos = {x:xx,  y:yy};	
@@ -474,13 +475,14 @@ function MyObject (xx, yy, clientWidth, clientHeight, img, type) {
 	this.div                = document.createElement("div"); 
 	this.div.id             = this.id;
 	this.div.className      = "block";
-	this.div.style.width    = clientWidth;
-	this.div.style.height   = clientHeight;
+	this.div.style.width    = clientWidth ;
+	this.div.style.height   = clientHeight ;
 	this.div.style.position = "absolute";
 	this.div.style.left     = this.pos.x + "px";
 	this.div.style.top      = this.pos.y + "px";
 	this.div.style.zIndex   = -5;
 	this.div.style.backgroundImage = "url('"+img+"')";
+	this.div.style.backgroundSize = imgX +"% "+imgY +"%" ;
 	document.body.appendChild(this.div);
 	
 	this.dimensions = {x: this.div.style.offsetWidth, y: this.div.style.offsetHeight };
@@ -492,23 +494,30 @@ function MyObject (xx, yy, clientWidth, clientHeight, img, type) {
 
 /* adds water objects to objectBlocks stack */
 
-objectBlocks.push( new MyObject(-20,   -15, clientWidth+70, 50, './imgs/tWater.png','block') ); //top water
-objectBlocks.push( new MyObject(-20, clientHeight-29, clientWidth+70, 50, './imgs/bwater.png','block') ); // bottom water
-objectBlocks.push( new MyObject(-50,   27, 100,    clientHeight-47, './imgs/water.png','block') ); // left water
-objectBlocks.push( new MyObject(clientWidth-30,   27, 70,    clientHeight-47, './imgs/water.png','block') ); // right water
-objectBlocks.push( new MyObject(200,   200, 143,    clientHeight-440, './imgs/wall.png','block') );	//wall 
-objectBlocks.push( new MyObject(800,   27, 95,    clientHeight-500, './imgs/water.png','block') );// Tmiddle water
-objectBlocks.push( new MyObject(800,   500, 95,    clientHeight-520, './imgs/water.png','block') );// Bmiddle water
-objectBlocks.push( new MyObject(818,   800, 63,    clientHeight-100, './imgs/waterB.png','block') );
-objectBlocks.push( new MyObject(818,   10, 63,    clientHeight-800, './imgs/waterB.png','block') );
-objectBlocks.push( new MyObject(-35,   10, 63,    clientHeight-10, './imgs/waterB.png','block') );
-objectBlocks.push( new MyObject(clientWidth-10,   10, 63,    clientHeight-10, './imgs/waterB.png','block') );
-for (var i=0; i<3; ++i){
-	objectBlocks.push( new MyObject(getRandomIntInclusive(50, document.body.clientWidth-50),   getRandomIntInclusive(50, document.body.clientHeight-50 ), 48, 48, './imgs/Cheese.png','med') );
+objectBlocks.push( new MyObject(0,   0, clientWidth, clientHeight*0.09, './imgs/tWater.png','block',5,100) ); //top water
+objectBlocks.push( new MyObject(0, clientHeight-clientHeight*0.07, clientWidth, clientHeight*0.09, './imgs/bwater.png','block',5,100) ); // bottom water
+objectBlocks.push( new MyObject(-(clientWidth*0.02),  0,clientWidth*0.05, clientHeight, './imgs/water.png','block',100,7) ); // left water
+objectBlocks.push( new MyObject(clientWidth-clientWidth*0.03,   0, clientWidth*0.05,    clientHeight, './imgs/water.png','block',100,7) ); // right water
+objectBlocks.push( new MyObject(clientWidth*0.1,   clientHeight*0.25, clientWidth*0.075,    clientHeight*0.5, './imgs/wall.png','block',100,33.333) );	//wall 
+objectBlocks.push( new MyObject(clientWidth*0.78,   clientHeight*0.45, clientWidth*0.05,    clientHeight*0.3333, './imgs/wall.png','block',160,50) );	//wall 
+objectBlocks.push( new MyObject(clientWidth*0.78,   clientHeight*0.37, clientWidth*0.2,    clientHeight*0.09, './imgs/wall.png','block',50,150) );	//wall 
+objectBlocks.push( new MyObject(clientWidth*0.5,   0, clientWidth*0.06,    clientHeight*0.37, './imgs/water.png','block',100,20) );// Tmiddle water
+objectBlocks.push( new MyObject(clientWidth*0.5,   clientHeight-clientHeight*0.37, clientWidth*0.06,    clientHeight*0.37, './imgs/water.png','block',100,20 ));// Bmiddle water
+objectBlocks.push( new MyObject(clientWidth*0.5,  0, clientWidth*0.06,    clientHeight*0.05, './imgs/waterB.png','block',100,100 ));
+objectBlocks.push( new MyObject(clientWidth*0.5,   clientHeight-clientHeight*0.05, clientWidth*0.06,    clientHeight*0.05, './imgs/waterB.png','block',100,100 ));
+objectBlocks.push( new MyObject(0,  clientHeight-clientHeight*0.04, clientWidth*0.06,    clientHeight*0.04, './imgs/waterB.png','block',100,100 ));
+objectBlocks.push( new MyObject(0,  0, clientWidth*0.06,    clientHeight*0.06, './imgs/waterB.png','block',100,100 ));
+objectBlocks.push( new MyObject(clientWidth-clientWidth*0.06,  clientHeight-clientHeight*0.04, clientWidth*0.06,    clientHeight*0.04, './imgs/waterB.png','block',100,100 )); 
+objectBlocks.push( new MyObject(clientWidth-clientWidth*0.06,  0, clientWidth*0.06,    clientHeight*0.06, './imgs/waterB.png','block',100,100) );
+
+
+for (var i=0; i<4; ++i){
+	objectBlocks.push( new MyObject(getRandomIntInclusive(clientWidth*0.05, clientWidth-clientWidth*0.05),   getRandomIntInclusive(clientHeight*0.09, clientHeight-clientHeight*0.09 ), clientWidth*0.03, clientHeight*0.07, './imgs/Cheese.png','med',100,100) );
 }
-for (var i=0; i<5; ++i){
-	objectBlocks.push( new MyObject(getRandomIntInclusive(50, document.body.clientWidth-50),   getRandomIntInclusive(50, document.body.clientHeight-50 ), 54, 48, './imgs/coin.png','coin') ); //36 /32
+for (var i=0; i<6; ++i){
+	objectBlocks.push( new MyObject(getRandomIntInclusive(clientWidth*0.05, clientWidth-clientWidth*0.05),   getRandomIntInclusive(clientHeight*0.09, clientHeight-clientHeight*0.09  ), clientWidth*0.03, clientHeight*0.07, './imgs/coin.png','coin',100,100) ); //36 /32
 }
+
 
 
 
