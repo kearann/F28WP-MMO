@@ -116,16 +116,20 @@ function keyDown(e) {
 	else if (e.keyCode == 38) { // up arrow
 		upPressed = true;
 	}
-	if (e.keyCode == '27') { // esc key
+	if (e.keyCode == 32) { // spacebar
+		if (player.firing == false) {
+			// Arrow dissapprears
+			callArrowMove();
+			player.firing = true;
+			setTimeout(firingFalse, 500);
+		}
+	}
+	if (e.keyCode == 27) { // esc key
 		// Bug: Pressing esc multiple times opens multiple popups
 		showPopup(pause);
 	}
 }
 
-/*
-var obj = document.getElementById("user");
-	obj.classList.add("stopped");
-	*/
 
 function keyUp(e) {
 	if (e.keyCode == 39) {
@@ -149,26 +153,34 @@ setInterval(gameTick, 1000 / fps);
 function gameTick() {
 	var obj = document.getElementById(player.id);
 
+	// saves previous position before player is moved
+	player.prev.x = player.pos.x;
+	player.prev.y = player.pos.y;
+
 	// Key Input
 	if (rightPressed) {
 		obj.classList.remove("facingLeft", "facingUp", "facingDown", "stopped");
 		obj.classList.add("facingRight");
 		player.pos.x += steps;
+		player.direction = 90;
 	}
 	else if (leftPressed) {
 		obj.classList.remove("facingRight", "facingUp", "facingDown", "stopped");
 		obj.classList.add("facingLeft");
 		player.pos.x -= steps;
+		player.direction = 270;
 	}
 	else if (upPressed) {
 		obj.classList.remove("facingLeft", "facingRight", "facingDown", "stopped");
 		obj.classList.add("facingUp");
 		player.pos.y -= steps;
+		player.direction = 0;
 	}
 	else if (downPressed) {
 		obj.classList.remove("facingRight", "facingUp", "facingLeft", "stopped");
 		obj.classList.add("facingDown");
 		player.pos.y += steps;
+		player.direction = 180;
 	} else {
 		obj.classList.add("stopped");
 	}
@@ -178,6 +190,16 @@ function gameTick() {
 	obj.style.left = player.pos.x + "px";
 	obj.style.top = player.pos.y + "px";
 
+	// Activates collision detection for player
+	var update = false;	//creates variable to hold whether the powerups have been moved or not
+	for (var ii = 0; ii < objectBlocks.length; ii++) {
+		var div = document.getElementById(objectBlocks[ii].id);
+		document.getElementById("health").innerHTML = "Health: " + (player.health) + "/100";
+		document.getElementById("points").innerHTML = "Points: " + (player.points);
+		if ((objectBlocks[ii].detectCollision(player.id, player, player.dimensions)) == "med" || (objectBlocks[ii].detectCollision(player.id, player, player.dimensions)) == "coin") {
+			div = moveDiv(true, div, ii);	//Calls function that will move the div to new location
+		}
+	}
 }
 
 
@@ -303,12 +325,7 @@ var form1 = `<div class="buttonContainer" style="top:110px;">
 showPopup(play);
 
 
-
-
 var objectBlocks = [];
-
-keyDown(null);
-keyUp(null);
 
 
 
@@ -325,12 +342,11 @@ function getRandomIntInclusive(min, max) {
 var clientHeight = document.body.clientHeight;
 var clientWidth = document.body.clientWidth;
 
-function callarrowMove() {
-	id = new arrow(player.pos.x + clientWidth * 0.025, player.pos.y + clientHeight * 0.025, clientWidth * 0.02, clientHeight * 0.04, './imgs/arrow.png', player.direction); id.movearrow();
+function callArrowMove() {
+	id = new arrow(player.pos.x + clientWidth * 0.025, player.pos.y + clientHeight * 0.025, clientWidth * 0.02, clientHeight * 0.04, './imgs/arrow.png', player.direction);
+	id.movearrow();
 }
-function firingTrue() {
-	player.firing = true;
-}
+
 function firingFalse() {
 	player.firing = false;
 }
