@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 var path = require('path');
-const sql_server = require("./MySQL.js")
+const sql_server = require("./MySQL.js");
 app.use(express.static('client'));
 
 var player = {
@@ -16,7 +16,15 @@ var player = {
 	IPAddress: "localhost"
 };
 
-sql_server.SetUserAll(player);
+sql_server.SetUser(player);
+
+player.prev_Y = 111;
+player.prev_X = 222;
+player.pos_Y = 333;
+player.pos_X = 444;
+direction = 180;
+
+sql_server.UpdateUser(player);
 
 
 
