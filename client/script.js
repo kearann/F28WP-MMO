@@ -8,6 +8,15 @@ var clientHeight = document.body.clientHeight;
 var clientWidth = document.body.clientWidth;
 
 
+var objectBlocks = [];
+var steps = 10;
+var rightPressed = false;
+var leftPressed = false;
+var upPressed = false;
+var downPressed = false;
+var spacePressed = false;
+
+
 // Player object
 var player = {
 	id: "user",
@@ -34,74 +43,9 @@ player.size.y = document.getElementById("user").offsetHeight;
 document.documentElement.style.overflow = 'hidden';  // firefox, chrome
 document.body.scroll = "no"; // ie only
 
-
-var steps = 10;
-var rightPressed = false;
-var leftPressed = false;
-var upPressed = false;
-var downPressed = false;
-var spacePressed = false;
-
-
 document.addEventListener('keydown', keyDown, false);
 document.addEventListener('keyup', keyUp, false);
 
-
-/*
-
-	e = e || window.event;	//if e doesn't exist in browser version use the window.event
-
-
-
-	var object = { x: 0, y: 0 };
-
-	var steps = 10;
-	var obj = document.getElementById(player.id);
-	if (popupStack.length == 0) {
-		if (e && e.keyCode == '38') { object.y -= steps; obj.style.background = "transparent url('imgs/up.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 0; } // up arrow  
-		if (e && e.keyCode == '40') { object.y += steps; obj.style.background = "transparent url('imgs/down.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 180; } // down arrow
-		if (e && e.keyCode == '37') { object.x -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 270; } // left arrow
-		if (e && e.keyCode == '39') { object.x += steps; obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 90; } // right arrow
-		if (e && e.keyCode == '32') { if (player.firing == false) { callarrowMove(); firingTrue(); setTimeout(firingFalse, 500); } } // spacebar
-		if (e && e.keyCode == '27') { // esc key
-			showPopup(pause);
-		}
-
-
-		player.prev.x = player.pos.x;	//saves previous position before player is moved
-		player.prev.y = player.pos.y;
-
-		player.pos.x += object.x;	//moves player by the value of object x and y values
-		player.pos.y += object.y;
-
-
-
-
-
-
-
-
-		if (e && (e.keyCode == '38' || e.keyCode == '40' || e.keyCode == '37' || e.keyCode == '39')) {
-			obj.classList.remove("stopped");	//if button pressed remove stopped from class name which will start animation
-			var obj = document.getElementById(player.id);
-			obj.style.left = player.pos.x + "px";
-			obj.style.top = player.pos.y + "px";
-			var update = false;	//creates variable to hold whether the powerups have been moved or not
-			for (var ii = 0; ii < objectBlocks.length; ii++) {
-				var div = document.getElementById(objectBlocks[ii].id);
-				document.getElementById("health").innerHTML = "Health: " + (player.health) + "/100";
-				document.getElementById("points").innerHTML = "Points: " + (player.points);
-				if ((objectBlocks[ii].detectCollision(player.id, player, player.dimensions)) == "med" || (objectBlocks[ii].detectCollision(player.id, player, player.dimensions)) == "coin") {
-					div = moveDiv(true, div, ii);	//Calls function that will move the div to new location
-				}
-			}
-
-			obj.style.left = player.pos.x + "px";	//updates player position incase it was changed by detectCollision
-			obj.style.top = player.pos.y + "px";
-		}
-
-	}
-	*/
 
 function keyDown(e) {
 	if (e.keyCode == 39) { // right arrow
@@ -235,14 +179,9 @@ function moveDiv(moved, div, ii) {
 }
 
 function getData() {
-	var name = document.forms["username"]["uName"].value;
-	player.name = name;
+	player.name = document.forms["username"]["uName"].value;
 
 }
-
-
-
-
 
 
 popupStack = []
@@ -325,22 +264,12 @@ var form1 = `<div class="buttonContainer" style="top:110px;">
 showPopup(play);
 
 
-var objectBlocks = [];
-
-
-
-
-
 function getRandomIntInclusive(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
 }
 
-
-
-var clientHeight = document.body.clientHeight;
-var clientWidth = document.body.clientWidth;
 
 function callArrowMove() {
 	id = new arrow(player.pos.x + clientWidth * 0.025, player.pos.y + clientHeight * 0.025, clientWidth * 0.02, clientHeight * 0.04, './imgs/arrow.png', player.direction);
