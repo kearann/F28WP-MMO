@@ -147,7 +147,7 @@ function keyUp(e) {
 }
 
 /* Game loop */
-var fps = 240;
+var fps = 60;
 setInterval(gameTick, 1000 / fps);
 
 function gameTick() {
