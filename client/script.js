@@ -58,7 +58,7 @@ function keyDown(e) {
     if (e && e.keyCode == '40') { object.y += steps;obj.style.background = "transparent url('imgs/down.png') 0 0 no-repeat";obj.style.backgroundSize="300% 100%"; player.direction = 180; } // down arrow
     if (e && e.keyCode == '37') { object.x -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat";obj.style.backgroundSize="300% 100%";player.direction = 270;} // left arrow
     if (e && e.keyCode == '39') { object.x += steps; obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat";obj.style.backgroundSize="300% 100%";player.direction = 90;} // right arrow
-	if (e && e.keyCode == '32') {if (player.firing==false){callBulletMove();firingTrue();setTimeout(firingFalse, 500);}} // up arrow
+	if (e && e.keyCode == '32') {if (player.firing==false){callarrowMove();firingTrue();setTimeout(firingFalse, 500);}} // up arrow
 	if (e && e.keyCode == '27') { // esc key
 		showPopup(pause); 
 	}
@@ -100,15 +100,7 @@ function keyDown(e) {
 	
 }}
 
-function callBulletMove(){
-	id=new bullet(player.pos.x+clientWidth*0.025, player.pos.y+clientHeight*0.025, clientWidth*0.02, clientHeight*0.04, './imgs/arrow.png',player.direction); id.moveBullet();
-}
-function firingTrue() {
-  player.firing=true;
-}
-function firingFalse() {
-  player.firing=false;
-}
+
 
 // no scroll bars
 document.documentElement.style.overflow = 'hidden';  // firefox, chrome
@@ -265,18 +257,26 @@ function getRandomIntInclusive(min, max) {
 var clientHeight = document.body.clientHeight;
 var clientWidth = document.body.clientWidth;
 
+function callarrowMove(){
+	id=new arrow(player.pos.x+clientWidth*0.025, player.pos.y+clientHeight*0.025, clientWidth*0.02, clientHeight*0.04, './imgs/arrow.png',player.direction); id.movearrow();
+}
+function firingTrue() {
+  player.firing=true;
+}
+function firingFalse() {
+  player.firing=false;
+}
 
 
 
-
-var bulletId = 0;	//variable to hold the next new ID number
-function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
-	this.id      = 'bulletids' + bulletId;	
+var arrowId = 0;	//variable to hold the next new ID number
+function arrow (xx, yy, clientWidth, clientHeight, img, direction) {
+	this.id      = 'arrowids' + arrowId;	
 	this.pos     = {x:xx,  y:yy};
 	this.startPos = {x:xx,  y:yy};	
 	this.angle	 = direction;
 	this.dist	=0;
-	bulletId += 1;	//increment newId by 1 to next id number
+	arrowId += 1;	//increment newId by 1 to next id number
 
 
 	this.update = function()
@@ -285,7 +285,7 @@ function bullet (xx, yy, clientWidth, clientHeight, img, direction) {
 		this.div.style.top  = this.pos.y + 'px';
 	}
 	
-	this.moveBullet = function() {
+	this.movearrow = function() {
 		var axis =null;
 		var closest=null;
 		if (this.angle==0){
@@ -381,7 +381,7 @@ function MyObject (xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 	this.pos     = {x:xx,  y:yy};
 	this.prevPos = {x:xx,  y:yy};	
 	this.type	 = type;
-	newId += 1;	//increment bulletId by 1 to next id number
+	newId += 1;	//increment arrowId by 1 to next id number
 
 	this.update = function()
 	{
