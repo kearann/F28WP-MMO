@@ -143,24 +143,36 @@ setInterval(gameTick, 1000 / fps);
 
 function gameTick() {
 	var obj = document.getElementById(player.id);
+
+	// Key Input
 	if (rightPressed) {
 		obj.classList.remove("facingLeft", "facingUp", "facingDown", "stopped");
 		obj.classList.add("facingRight");
+		player.pos.x += steps;
 	}
 	else if (leftPressed) {
 		obj.classList.remove("facingRight", "facingUp", "facingDown", "stopped");
 		obj.classList.add("facingLeft");
+		player.pos.x -= steps;
 	}
 	else if (upPressed) {
 		obj.classList.remove("facingLeft", "facingRight", "facingDown", "stopped");
 		obj.classList.add("facingUp");
+		player.pos.y -= steps;
 	}
 	else if (downPressed) {
 		obj.classList.remove("facingRight", "facingUp", "facingLeft", "stopped");
 		obj.classList.add("facingDown");
+		player.pos.y += steps;
 	} else {
 		obj.classList.add("stopped");
 	}
+
+
+	// Move player to position
+	obj.style.left = player.pos.x + "px";
+	obj.style.top = player.pos.y + "px";
+
 }
 
 
