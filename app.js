@@ -1,21 +1,18 @@
 const express = require('express');
 const app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 var path = require('path');
 require('child_process').fork('MySQL.js');
+
 app.use(express.static('client'));
 
-/*app.get('/', (req, res) => {
-	res.sendFile('game.html', { root: '.' });
-});
+io.on('connection', function(socket){
+	socket.on('chat message', function(msg){
+	  io.emit('chat message', msg);
+	});
+  });
 
-app.get('/script.js', (req, res) => {
-	res.sendFile('script.js', { root: '.'});
-});
-
-app.get('/style.css', (req, res) => {
-	res.sendFile('style.css', {root: '.'});
-});*/
-
-app.listen(3000, () => {
+app.listen(3000, function() {
 	console.log("Listening on port: 3000!");
 });
