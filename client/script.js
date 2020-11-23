@@ -46,6 +46,7 @@ var spacePressed = false;
 document.addEventListener('keydown', keyDown, false);
 document.addEventListener('keyup', keyUp, false);
 
+
 /*
 
 	e = e || window.event;	//if e doesn't exist in browser version use the window.event
@@ -103,17 +104,21 @@ document.addEventListener('keyup', keyUp, false);
 	*/
 
 function keyDown(e) {
-	if (e.keyCode == 39) {
+	if (e.keyCode == 39) { // right arrow
 		rightPressed = true;
 	}
-	else if (e.keyCode == 37) {
+	else if (e.keyCode == 37) { // left arrow
 		leftPressed = true;
 	}
-	if (e.keyCode == 40) {
+	if (e.keyCode == 40) { // down arrow
 		downPressed = true;
 	}
-	else if (e.keyCode == 38) {
+	else if (e.keyCode == 38) { // up arrow
 		upPressed = true;
+	}
+	if (e.keyCode == '27') { // esc key
+		// Bug: Pressing esc multiple times opens multiple popups
+		showPopup(pause);
 	}
 }
 
@@ -138,7 +143,7 @@ function keyUp(e) {
 }
 
 /* Game loop */
-var fps = 60;
+var fps = 240;
 setInterval(gameTick, 1000 / fps);
 
 function gameTick() {
