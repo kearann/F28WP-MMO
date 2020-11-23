@@ -1,16 +1,18 @@
 
+// Adds background grass
 document.body.style.backgroundImage = "url(./imgs/bg.png)";
 document.body.style.backgroundRepeat = "repeat";
+
+// Gets client dimensions
 var clientHeight = document.body.clientHeight;
 var clientWidth = document.body.clientWidth;
 
 
-
+// Player object
 var player = {
 	id: "user",
 	prev: { x: 700, y: 300 },
 	pos: { x: 700, y: 300 },
-	prev: { x: 300, y: 100 },
 	size: { x: 10, y: 10 },
 	direction: 90,
 	points: 0,
@@ -19,44 +21,32 @@ var player = {
 	firing: false
 }
 
-/* Start of refactoring */
 
-/* Game loop */
-
-var frameRate = 60;
-setInterval(gameTick, 1000 / frameRate);
-function gameTick() {
-
-}
-
-
-
-/* End of refactoring */
-
-
-
+// Sets player size to the players div size
 player.size.x = document.getElementById("user").offsetWidth;
 player.size.y = document.getElementById("user").offsetHeight;
 
 
 
-document.onkeydown = keyDown;
 
 
+// no scroll bars
+document.documentElement.style.overflow = 'hidden';  // firefox, chrome
+document.body.scroll = "no"; // ie only
 
 
-
-function keyUp(e) {
-	var obj = document.getElementById("user");
-	obj.classList.add("stopped");
-
-}
-
-document.onkeyup = keyUp;
+var steps = 10;
+var rightPressed = false;
+var leftPressed = false;
+var upPressed = false;
+var downPressed = false;
+var spacePressed = false;
 
 
-function keyDown(e) {
+document.addEventListener('keydown', keyDown, false);
+document.addEventListener('keyup', keyUp, false);
 
+/*
 
 	e = e || window.event;	//if e doesn't exist in browser version use the window.event
 
@@ -71,7 +61,7 @@ function keyDown(e) {
 		if (e && e.keyCode == '40') { object.y += steps; obj.style.background = "transparent url('imgs/down.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 180; } // down arrow
 		if (e && e.keyCode == '37') { object.x -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 270; } // left arrow
 		if (e && e.keyCode == '39') { object.x += steps; obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 90; } // right arrow
-		if (e && e.keyCode == '32') { if (player.firing == false) { callarrowMove(); firingTrue(); setTimeout(firingFalse, 500); } } // up arrow
+		if (e && e.keyCode == '32') { if (player.firing == false) { callarrowMove(); firingTrue(); setTimeout(firingFalse, 500); } } // spacebar
 		if (e && e.keyCode == '27') { // esc key
 			showPopup(pause);
 		}
@@ -110,13 +100,68 @@ function keyDown(e) {
 		}
 
 	}
+	*/
+
+function keyDown(e) {
+	if (e.keyCode == 39) {
+		rightPressed = true;
+	}
+	else if (e.keyCode == 37) {
+		leftPressed = true;
+	}
+	if (e.keyCode == 40) {
+		downPressed = true;
+	}
+	else if (e.keyCode == 38) {
+		upPressed = true;
+	}
 }
 
+/*
+var obj = document.getElementById("user");
+	obj.classList.add("stopped");
+	*/
 
+function keyUp(e) {
+	if (e.keyCode == 39) {
+		rightPressed = false;
+	}
+	else if (e.keyCode == 37) {
+		leftPressed = false;
+	}
+	if (e.keyCode == 40) {
+		downPressed = false;
+	}
+	else if (e.keyCode == 38) {
+		upPressed = false;
+	}
+}
 
-// no scroll bars
-document.documentElement.style.overflow = 'hidden';  // firefox, chrome
-document.body.scroll = "no"; // ie only
+/* Game loop */
+var fps = 60;
+setInterval(gameTick, 1000 / fps);
+
+function gameTick() {
+	var obj = document.getElementById(player.id);
+	if (rightPressed) {
+		obj.classList.remove("facingLeft", "facingUp", "facingDown", "stopped");
+		obj.classList.add("facingRight");
+	}
+	else if (leftPressed) {
+		obj.classList.remove("facingRight", "facingUp", "facingDown", "stopped");
+		obj.classList.add("facingLeft");
+	}
+	else if (upPressed) {
+		obj.classList.remove("facingLeft", "facingRight", "facingDown", "stopped");
+		obj.classList.add("facingUp");
+	}
+	else if (downPressed) {
+		obj.classList.remove("facingRight", "facingUp", "facingLeft", "stopped");
+		obj.classList.add("facingDown");
+	} else {
+		obj.classList.add("stopped");
+	}
+}
 
 
 

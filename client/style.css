@@ -89,17 +89,36 @@ font-size:1.6vw;}
 
  
   animation: playeranimation 0.5s steps(3) infinite; 
-  z-index: -5;
+  z-index: 5;
 
   transform-origin: 50% 50%;
 }
+
 
 /* Animation keyframes for the sprite */
 @keyframes playeranimation {
   100% { background-position: 150% 0; }	/*moves position of viewport to right by 273px */
 }
 
+.facingRight{
+  background: transparent url('imgs/right.png') 0 0 no-repeat;
+  background-size: 300% 100%;
+}
 
+.facingLeft{
+  background: transparent url('imgs/left.png') 0 0 no-repeat;
+  background-size: 300% 100%;
+}
+
+.facingUp{
+  background: transparent url('imgs/up.png') 0 0 no-repeat;
+  background-size: 300% 100%;
+}
+
+.facingDown{
+  background: transparent url('imgs/down.png') 0 0 no-repeat;
+  background-size: 300% 100%;
+}
 
 
 .stopped{
