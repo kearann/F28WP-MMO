@@ -89,7 +89,7 @@ font-size:1.6vw;}
 
  
   animation: playeranimation 0.5s steps(3) infinite; 
-  z-index: 5;
+  z-index: -5;
 
   transform-origin: 50% 50%;
 }
