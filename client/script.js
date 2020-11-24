@@ -41,7 +41,7 @@ var leftPressed = false;
 var upPressed = false;
 var downPressed = false;
 var spacePressed = false;
-
+var chatActive = false;
 
 document.addEventListener('keydown', keyDown, false);
 document.addEventListener('keyup', keyUp, false);
@@ -104,6 +104,7 @@ document.addEventListener('keyup', keyUp, false);
 	*/
 
 function keyDown(e) {
+	if (popupStack.length ==0 && chatActive==false){
 	if (e.keyCode == 39) { // right arrow
 		rightPressed = true;
 	}
@@ -123,7 +124,7 @@ function keyDown(e) {
 			player.firing = true;
 			setTimeout(firingFalse, 500);
 		}
-	}
+	}}
 	if (e.keyCode == 27) { // esc key
 		// Bug: Pressing esc multiple times opens multiple popups
 		showPopup(pause);
@@ -152,11 +153,11 @@ setInterval(gameTick, 1000 / fps);
 
 function gameTick() {
 	var obj = document.getElementById(player.id);
-
+	
 	// saves previous position before player is moved
 	player.prev.x = player.pos.x;
 	player.prev.y = player.pos.y;
-
+	
 	// Key Input
 	if (rightPressed) {
 		obj.classList.remove("facingLeft", "facingUp", "facingDown", "stopped");
@@ -202,6 +203,9 @@ function gameTick() {
 	}
 }
 
+function activechat (state){
+	chatActive=state;
+}
 
 
 function loopObjects() {
@@ -222,8 +226,7 @@ function moveDiv(moved, div, ii) {
 	while (update) {	//while new div position is unsuitable
 		for (var count = 0; count < objectBlocks.length; count++) {
 			if ((objectBlocks[count].detectOverlap(objectBlocks[ii].id, objectBlocks[ii].type))) {	//if new position of div is unsuitable (overlaps with blocking object) then it is moved again
-				div.style.left = getRandomIntInclusive(50, document.body.clientWidth - 50) + "px";
-				div.style.top = getRandomIntInclusive(50, document.body.clientHeight - 50) + "px";
+				moveDiv(true, div, ii);
 			}
 			else {
 				update = false;	//if div has been moved to suitable position then loop can end
