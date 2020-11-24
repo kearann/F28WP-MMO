@@ -1,7 +1,10 @@
-const express = require('express');
-const app = express();
+var express = require('express');
+var app = express();
 var path = require('path');
 const sql_server = require("./MySQL.js");
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
 app.use(express.static('client'));
 
 var player = {
@@ -25,6 +28,13 @@ player.pos_X = 444;
 direction = 180;
 
 sql_server.UpdateUser(player);
+
+io.on('connection', function(socket){
+	socket.on('chat message', function(msg){
+	  io.emit('chat message', msg);
+	});
+  });
+
 
 http.listen(3000, function() {
 	console.log("Listening on port: 3000!");
