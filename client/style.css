@@ -1,149 +1,135 @@
 * {
-margin: 0;
-padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
-.button
-{
+.button {
   margin: 80px 0px;
   width: 60%;
   height: 20%;
-  font: 1.5vw 'Arial', sans-serif;
+  font: 1.5vw "Arial", sans-serif;
   color: white;
   text-align: center;
   background: rgba(3, 0, 42, 0.6);
-  border-radius: 3px; 
+  border-radius: 3px;
 }
 
-#infoBar 
-{ top:5px;
-  left:5px;
-  position:absolute;
+#infoBar {
+  top: 5px;
+  left: 5px;
+  position: absolute;
   width: 15%;
   height: 15%;
   text-align: center;
   background: rgba(3, 0, 42, 0.8);
-  z-index:20;
+  z-index: 20;
 }
-#health, #points{
-	font: 1.5vw 'Arial', sans-serif;
-    color: white;	
-	height:40%;
-	padding:10px;
+#health,
+#points {
+  font: 1.5vw "Arial", sans-serif;
+  color: white;
+  height: 40%;
+  padding: 10px;
 }
 
-.button:hover
-{
-	color: rgb(3, 0, 42);
+.button:hover {
+  color: rgb(3, 0, 42);
   background: rgba(255, 255, 255, 0.75);
 }
-	
-p{
-	font-size:1.2vw;
+
+p {
+  font-size: 1.2vw;
 }
 
-h2{
-font-size:1.6vw;}
+h2 {
+  font-size: 1.6vw;
+}
 
 .buttonContainer {
-	position:relative; 
-	margin: 0 auto; 
-	width:60%;
-	top:30%;
+  position: relative;
+  margin: 0 auto;
+  width: 60%;
+  top: 30%;
 }
 
 #menuContainer {
-	text-align:center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    visibility:hidden;
-    background-color: rgba(22,52,22,0.7);
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  visibility: hidden;
+  background-color: rgba(22, 52, 22, 0.7);
 }
 
 #menuContainer.show {
-    visibility: visible;
-    display: block;
+  visibility: visible;
+  display: block;
 }
 .pauseMenu {
-	 width:40%; 
-    background:#e0e0e0; 
-	margin: auto;
-    position:relative; 
-    z-index:10;
-    top: 25%;
-    padding:30px; 
+  width: 40%;
+  background: #e0e0e0;
+  margin: auto;
+  position: relative;
+  z-index: 10;
+  top: 25%;
+  padding: 30px;
 }
 
-.wrapper
-{ 
-  padding: 20px;     
-} 
+.wrapper {
+  padding: 20px;
+}
 
 .player {
   position: absolute;
   left: 100px;
-  top:  100px;
-  width: 6%;   
-  height: 10%;   
+  top: 100px;
+  width: 6%;
+  height: 10%;
 
- 
-  animation: playeranimation 0.5s steps(3) infinite; 
+  animation: playeranimation 0.5s steps(3) infinite;
   z-index: -5;
 
   transform-origin: 50% 50%;
 }
 
-
 /* Animation keyframes for the sprite */
 @keyframes playeranimation {
-  100% { background-position: 150% 0; }	/*moves position of viewport to right by 273px */
+  100% {
+    background-position: 150% 0;
+  } /*moves position of viewport to right by 273px */
 }
 
-.facingRight{
-  background: transparent url('imgs/right.png') 0 0 no-repeat;
+.facingRight {
+  background: transparent url("imgs/right.png") 0 0 no-repeat;
   background-size: 300% 100%;
 }
 
-.facingLeft{
-  background: transparent url('imgs/left.png') 0 0 no-repeat;
+.facingLeft {
+  background: transparent url("imgs/left.png") 0 0 no-repeat;
   background-size: 300% 100%;
 }
 
-.facingUp{
-  background: transparent url('imgs/up.png') 0 0 no-repeat;
+.facingUp {
+  background: transparent url("imgs/up.png") 0 0 no-repeat;
   background-size: 300% 100%;
 }
 
-.facingDown{
-  background: transparent url('imgs/down.png') 0 0 no-repeat;
+.facingDown {
+  background: transparent url("imgs/down.png") 0 0 no-repeat;
   background-size: 300% 100%;
 }
 
-
-.stopped{
-    -webkit-animation-play-state:paused !important;
-    -moz-animation-play-state:paused !important;
-    -o-animation-play-state:paused !important;	//pauses animation for objects whose class is set to paused (each line is for different browsers)
-    animation-play-state:paused !important;
+.stopped {
+  -webkit-animation-play-state: paused !important;
+  -moz-animation-play-state: paused !important;
+  -o-animation-play-state: paused !important; /*pauses animation for objects whose class is set to paused (each line is for different browsers)*/
+  animation-play-state: paused !important;
 }
-
-
-
-
-
-
 
 .block {
-    width: 50px; 
-    height: 50px; 
-    display: inline-block; 
-	z-index: -1;
-	position: absolute;
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  z-index: -1;
+  position: absolute;
 }
-
-
-
-
-
-
