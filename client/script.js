@@ -44,62 +44,8 @@ var chatActive = false;
 document.addEventListener("keydown", keyDown, false);
 document.addEventListener("keyup", keyUp, false);
 
-var users={};
-/*
+var users = {};
 
-	e = e || window.event;	//if e doesn't exist in browser version use the window.event
-
-
-
-	var object = { x: 0, y: 0 };
-
-	var steps = 10;
-	var obj = document.getElementById(player.id);
-	if (popupStack.length == 0) {
-		if (e && e.keyCode == '38') { object.y -= steps; obj.style.background = "transparent url('imgs/up.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 0; } // up arrow  
-		if (e && e.keyCode == '40') { object.y += steps; obj.style.background = "transparent url('imgs/down.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 180; } // down arrow
-		if (e && e.keyCode == '37') { object.x -= steps; obj.style.background = "transparent url('imgs/left.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 270; } // left arrow
-		if (e && e.keyCode == '39') { object.x += steps; obj.style.background = "transparent url('imgs/right.png') 0 0 no-repeat"; obj.style.backgroundSize = "300% 100%"; player.direction = 90; } // right arrow
-		if (e && e.keyCode == '32') { if (player.firing == false) { callarrowMove(); firingTrue(); setTimeout(firingFalse, 500); } } // spacebar
-		if (e && e.keyCode == '27') { // esc key
-			showPopup(pause);
-		}
-
-
-		player.prev.x = player.pos.x;	//saves previous position before player is moved
-		player.prev.y = player.pos.y;
-
-		player.pos.x += object.x;	//moves player by the value of object x and y values
-		player.pos.y += object.y;
-
-
-
-
-
-
-
-
-		if (e && (e.keyCode == '38' || e.keyCode == '40' || e.keyCode == '37' || e.keyCode == '39')) {
-			obj.classList.remove("stopped");	//if button pressed remove stopped from class name which will start animation
-			var obj = document.getElementById(player.id);
-			obj.style.left = player.pos.x + "px";
-			obj.style.top = player.pos.y + "px";
-			var update = false;	//creates variable to hold whether the powerups have been moved or not
-			for (var ii = 0; ii < objectBlocks.length; ii++) {
-				var div = document.getElementById(objectBlocks[ii].id);
-				document.getElementById("health").innerHTML = "Health: " + (player.health) + "/100";
-				document.getElementById("points").innerHTML = "Points: " + (player.points);
-				if ((objectBlocks[ii].detectCollision(player.id, player, player.dimensions)) == "med" || (objectBlocks[ii].detectCollision(player.id, player, player.dimensions)) == "coin") {
-					div = moveDiv(true, div, ii);	//Calls function that will move the div to new location
-				}
-			}
-
-			obj.style.left = player.pos.x + "px";	//updates player position incase it was changed by detectCollision
-			obj.style.top = player.pos.y + "px";
-		}
-
-	}
-	*/
 
 function keyDown(e) {
 	if (popupStack.length == 0 && chatActive == false) {
@@ -219,30 +165,34 @@ function gameTick() {
 }
 
 // Receive movement data
+/*
 socket.on('input info', function (playerNewPos) {
 	player.pos.x = playerNewPos.x;
 	player.pos.y = playerNewPos.y;
 })
+*/
 
-
-socket.on('updated', function(players) {
-	 for (var id in players) {
+socket.on('updated', function (players) {
+	for (var id in players) {
 		var player = players[id];
-		if (!users.hasOwnProperty(player.id)){
-		  let div = document.createElement('div');
-		  div.id    = player.id;
-		  div.className = 'player facingRight';
-		  document.body.appendChild( div );
-		  //divs[player.id] = div;
+		if (!users.hasOwnProperty(player.id)) {
+			let div = document.createElement('div');
+			div.id = player.id;
+			div.className = 'player facingRight';
+			document.body.appendChild(div);
+			//divs[player.id] = div;
 		}
-		let obj =document.getElementById(player.id)
+		let obj = document.getElementById(player.id)
 		obj.style.left = player.x + "px";
-		obj.style.top  = player.y + "px";
+		obj.style.top = player.y + "px"
+		obj.classList.remove("facingRight", "facingUp", "facingLeft", "facingDown");
+		obj.classList.add(player.direction);;
 		//div.innerHTML = player.id;
 
-	users[player.id] = player;}
-	
-		
+		users[player.id] = player;
+	}
+
+
 })
 
 function activechat(state) {
@@ -908,7 +858,7 @@ $(function () {
 		if(players[socket.id]){
 			x = document.getElementById(socket.id);
 			x.style.left = users.x + "px";
-		    x.style.top = users.y + "px";
+			x.style.top = users.y + "px";
 		} else{
 			players[socket.id] = users;
 

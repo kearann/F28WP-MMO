@@ -10,52 +10,57 @@ app.use(express.static('client'));
 
 let players = {};
 
-io.on('connection', function(socket){
-////////////////////////////////////////////////////////////////////////////
-	socket.on('new_players', function(usr){
+io.on('connection', function (socket) {
+	////////////////////////////////////////////////////////////////////////////
+	socket.on('new_players', function (usr) {
 		players[socket.id] = {
 			id: socket.id,
 			username: usr,
 			x: 700,
 			y: 300,
+			direction: "facingRight",
 			health: 100,
 			points: 0,
 		};
-	io.emit('new_player', players[socket.id]);
+		io.emit('new_player', players[socket.id]);
 	});
-////////////////////////////////////////////////////////////////////////////
-	socket.on('chat message', function(msg){
-		if(msg.name && msg.message){
-	  io.emit('chat message', msg.name + ": " + msg.message);
-	 }
+	////////////////////////////////////////////////////////////////////////////
+	socket.on('chat message', function (msg) {
+		if (msg.name && msg.message) {
+			io.emit('chat message', msg.name + ": " + msg.message);
+		}
 	});
-///////////////////////////////////////////////////////////////////////////
-	socket.on('input info', function(usr){
+	///////////////////////////////////////////////////////////////////////////
+	socket.on('input info', function (usr) {
 
-		if(usr.playerDir == "right"){ // x +=
+		if (usr.playerDir == "right") { // x +=
 			players[socket.id].x += 5;
-		} else if(usr.playerDir == "down"){ //y +=
+			players[socket.id].direction = "facingRight";
+		} else if (usr.playerDir == "down") { //y +=
 			players[socket.id].y += 5;
-		} else if(usr.playerDir == "left"){ // x -=
+			players[socket.id].direction = "facingDown";
+		} else if (usr.playerDir == "left") { // x -=
 			players[socket.id].x -= 5;
-		} else if(usr.playerDir == "up"){ // y -=
+			players[socket.id].direction = "facingLeft";
+		} else if (usr.playerDir == "up") { // y -=
 			players[socket.id].y -= 5;
+			players[socket.id].direction = "facingUp";
 		}
 
-		io.emit('input info', players[socket.id]);
+		//io.emit('input info', players[socket.id]);
 	});
-///////////////////////////////////////////////////////////////////////////
-	socket.on('disconnect', function(){
+	///////////////////////////////////////////////////////////////////////////
+	socket.on('disconnect', function () {
 		delete players[socket.id];
 		io.emit('user disconnected', players[socket.id]);
 	});
-  
-  /////////////////////////////////////////////////////////////
-  socket.on('update', function() {
-  io.emit('updated', players);
-  });
+
+	/////////////////////////////////////////////////////////////
+	socket.on('update', function () {
+		io.emit('updated', players);
+	});
 });
 
-http.listen(3000, function() {
+http.listen(3000, function () {
 	console.log("Listening on port: 3000!");
 });
