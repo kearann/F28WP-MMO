@@ -211,6 +211,9 @@ function gameTick() {
 	}
 }
 
+// Receive movement data
+
+
 function activechat(state) {
 	chatActive = state;
 }
