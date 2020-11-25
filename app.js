@@ -67,7 +67,6 @@ io.on('connection', function (socket) {
 
 	socket.on('point', function () {
 		if (players[socket.id]) {
-			console.log('point added' + players[socket.id].username)
 			players[socket.id].points += 10;
 		}
 	})
