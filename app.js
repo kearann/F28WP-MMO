@@ -12,7 +12,7 @@ var players = [];
 
 io.on('connection', function(socket){
 
-	socket.on('new_player', function(usr){
+	socket.on('new_players', function(usr){
 		players[socket.id] = {
 			username: usr,
 			x: 700,
@@ -20,19 +20,24 @@ io.on('connection', function(socket){
 			health: 100,
 			points: 0,
 		};
+		console.log(players[socket.id].username);
 
 	io.emit('new_player', players[socket.id]);
 	});
 
 	socket.on('chat message', function(msg){
-		var username = players[socket.id].username;
-	  io.emit('chat message', username + ": " + msg);
+		console.log(players[socket.id])
+		console.log("Before");
+		if(players[socket.id]){
+		console.log("After");
+	  io.emit('chat message', players[socket.id].username + ": " + msg);
+	};
 	});
 
 	socket.on('input info', function(usr){
 
 		if(usr.playerDir == "right"){ // x +=
-			players[socket.id].x += 5;
+			players[socket.id].x += 5
 		} else if(usr.playerDir == "down"){ //y +=
 			players[socket.id].y += 5;
 		} else if(usr.playerDir == "left"){ // x -=
@@ -40,11 +45,13 @@ io.on('connection', function(socket){
 		} else if(usr.up == "up"){ // y -=
 			players[socket.id].y -= 5;
 		}
+
+		io.emit('input info', players[socket.id]);
 	});
 
 	socket.on('disconnect', function(){
 		delete players[socket.id];
-		io.emit('disconnect', players[socket.id]);
+		io.emit('user disconnected', players[socket.id]);
 	});
   });
 
