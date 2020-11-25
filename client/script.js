@@ -174,13 +174,9 @@ socket.on('updated', function (players) {
 			document.body.appendChild(div);
 			//divs[player.id] = div;
 		}
-		let obj = document.getElementById(playerNew.id)
-		obj.style.left = playerNew.x + "px";
-		obj.style.top = playerNew.y + "px"
-		obj.classList.remove("facingRight", "facingUp", "facingLeft", "facingDown");
-		obj.classList.add(playerNew.direction);;
-		//div.innerHTML = player.id;
 
+		//div.innerHTML = player.id;
+		let obj = document.getElementById(playerNew.id)
 
 
 		if (playerNew.username == player.name) {
@@ -192,20 +188,44 @@ socket.on('updated', function (players) {
 				var div = document.getElementById(objectBlocks[ii].id);
 				//document.getElementById("health").innerHTML = "Health: " + player.health + "/100";
 				//document.getElementById("points").innerHTML = "Points: " + player.points;
-
-				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med") {
+				var doesCollide = objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions);
+				var doesCollideBool = false;
+				if (doesCollide == "med") {
 					socket.emit('med');
 				}
-				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
+				if (doesCollide == "coin") {
 					socket.emit('point');
 				}
-				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med" || objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
+				if (doesCollide == "med" || doesCollide == "coin") {
 					div = moveDiv(true, div, ii); //Calls function that will move the div to new location
+				}
+				if (doesCollide == "block") {
+					console.log('BLOCKOMODE');
+					if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "block") {
+						if (playerNew.direction == "facingRight") {
+							playerNew.x -= 10;
+						} else if (playerNew.direction == "facingLeft") {
+							playerNew.x += 10;
+						} else if (playerNew.direction == "facingDown") {
+							playerNew.y -= 10;
+						} else if (playerNew.direction == "facingUp") {
+							playerNew.y += 10;
+						}
+					}
+					socket.emit('hit block', playerNew);
 				}
 			}
 		}
 
+
+
+		obj.style.left = playerNew.x + "px";
+		obj.style.top = playerNew.y + "px";
+		obj.classList.remove("facingRight", "facingUp", "facingLeft", "facingDown");
+		obj.classList.add(playerNew.direction);;
+
 		users[playerNew.id] = playerNew;
+
 	}
 
 
@@ -591,6 +611,7 @@ function MyObject(xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 			Math.abs(xDiff) < Math.abs(xSize)
 		) {
 			if (this.type == "block") {
+				console.log('detect block');
 				return "block"; // doesnt move character
 			} else if (this.type == "med") {
 				//if user collides with med kit increase health by 25 (max 100pts)

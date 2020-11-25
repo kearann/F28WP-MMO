@@ -50,12 +50,20 @@ io.on('connection', function (socket) {
 
 		//io.emit('input info', players[socket.id]);
 	});
+
+	socket.on('hit block', function (collidePlayer) {
+		if (players[socket.id]) {
+			players[socket.id].x = collidePlayer.x;
+			players[socket.id].y = collidePlayer.y;
+		}
+	});
 	///////////////////////////////////////////////////////////////////////////
 	socket.on('disconnect', function () {
 		io.emit('user disconnected', players[socket.id]);
 		delete players[socket.id];
 
 	});
+
 
 	socket.on('med', function () {
 		if (players[socket.id]) {
