@@ -27,24 +27,25 @@ io.on('connection', function (socket) {
 	////////////////////////////////////////////////////////////////////////////
 	socket.on('chat message', function (msg) {
 		if (msg.name && msg.message) {
-			io.emit('chat message', msg.name + ": " + msg.message);
+			io.emit('chat message', msg.name + " : " + msg.message);
 		}
 	});
 	///////////////////////////////////////////////////////////////////////////
 	socket.on('input info', function (usr) {
-
-		if (usr.playerDir == "right") { // x +=
-			players[socket.id].x += 5;
-			players[socket.id].direction = "facingRight";
-		} else if (usr.playerDir == "down") { //y +=
-			players[socket.id].y += 5;
-			players[socket.id].direction = "facingDown";
-		} else if (usr.playerDir == "left") { // x -=
-			players[socket.id].x -= 5;
-			players[socket.id].direction = "facingLeft";
-		} else if (usr.playerDir == "up") { // y -=
-			players[socket.id].y -= 5;
-			players[socket.id].direction = "facingUp";
+		if (players[socket.id]) {
+			if (usr.playerDir == "right") { // x +=
+				players[socket.id].x += 5;
+				players[socket.id].direction = "facingRight";
+			} else if (usr.playerDir == "down") { //y +=
+				players[socket.id].y += 5;
+				players[socket.id].direction = "facingDown";
+			} else if (usr.playerDir == "left") { // x -=
+				players[socket.id].x -= 5;
+				players[socket.id].direction = "facingLeft";
+			} else if (usr.playerDir == "up") { // y -=
+				players[socket.id].y -= 5;
+				players[socket.id].direction = "facingUp";
+			}
 		}
 
 		//io.emit('input info', players[socket.id]);
