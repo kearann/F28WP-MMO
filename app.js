@@ -14,13 +14,14 @@ io.on('connection', function(socket){
 
 	socket.on('new_player', function(usr){
 		players[socket.id] = {
-			username: usr.username,
+			username: usr,
 			x: 700,
 			y: 300,
 			health: 100,
 			points: 0,
-			ip: socket.request.connection.remoteAddress;
 		};
+
+	io.emit('new_player', players[socket.id]);
 	});
 
 	socket.on('chat message', function(msg){
@@ -42,7 +43,8 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('disconnect', function(){
-
+		delete players[socket.id];
+		io.emit('disconnect', players[socket.id]);
 	});
   });
 
