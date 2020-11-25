@@ -148,7 +148,10 @@ function keyUp(e) {
 
 /* Game loop */
 var fps = 60;
-setInterval(gameTick, 1000 / fps);
+if (emitData.name) {
+	console.log("starting gametick");
+	setInterval(gameTick, 1000 / fps);
+}
 
 function gameTick() {
 	var obj = document.getElementById(player.id);
@@ -212,7 +215,10 @@ function gameTick() {
 }
 
 // Receive movement data
-
+socket.on('input info', function (newx, newy) {
+	player.pos.x = newx;
+	player.pos.y = newy;
+})
 
 function activechat(state) {
 	chatActive = state;
@@ -859,7 +865,12 @@ for (var i = 0; i < 6; ++i) {
 $(function () {
 	var socket = io();
 	$("#chatForm").submit(function () {
-		socket.emit("chat message", $("#chatTextBox").val());
+		var emitMSG = {
+			name: player.name,
+			message: $("#chatTextBox").val()
+		}
+
+		socket.emit("chat message", emitMSG);
 		$("#chatTextBox").val("");
 		return false;
 	});
