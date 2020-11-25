@@ -51,8 +51,9 @@ io.on('connection', function (socket) {
 	});
 	///////////////////////////////////////////////////////////////////////////
 	socket.on('disconnect', function () {
-		delete players[socket.id];
 		io.emit('user disconnected', players[socket.id]);
+		delete players[socket.id];
+
 	});
 
 	/////////////////////////////////////////////////////////////
