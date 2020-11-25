@@ -184,22 +184,28 @@ socket.on('updated', function (players) {
 		document.getElementById("points").innerHTML = "Points: " + playerNew.points;
 
 		// Activates collision detection for player
-		var update = false; //creates variable to hold whether the powerups have been moved or not
+		//creates variable to hold whether the powerups have been moved or not
 		for (var ii = 0; ii < objectBlocks.length; ii++) {
 			var div = document.getElementById(objectBlocks[ii].id);
 			//document.getElementById("health").innerHTML = "Health: " + player.health + "/100";
 			//document.getElementById("points").innerHTML = "Points: " + player.points;
-			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med" || objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
-				div = moveDiv(true, div, ii); //Calls function that will move the div to new location
-			}
+
 			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med") {
+				console.log('jed');
 				socket.emit('med');
 			}
 			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
+				console.log('wow');
 				socket.emit('point');
+
 			}
-			console.log('wow')
+			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med" || objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
+				div = moveDiv(true, div, ii); //Calls function that will move the div to new location
+			}
+
+
 		}
+
 		users[playerNew.id] = playerNew;
 	}
 
