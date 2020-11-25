@@ -56,6 +56,18 @@ io.on('connection', function (socket) {
 
 	});
 
+	socket.on('med', function () {
+		players[socket.id].health += 25;
+		if (players[socket.id].health > 100) {
+			players[socket.id].health = 100;
+		}
+	});
+
+	socket.on('point', function () {
+		console.log('point added')
+		players[socket.id].points += 10;
+	})
+
 	/////////////////////////////////////////////////////////////
 	socket.on('update', function () {
 		io.emit('updated', players);

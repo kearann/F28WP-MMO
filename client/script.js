@@ -106,61 +106,46 @@ function gameTick() {
 		var obj = document.getElementById(player.id);
 
 		// saves previous position before player is moved
-		player.prev.x = player.pos.x;
-		player.prev.y = player.pos.y;
+		//player.prev.x = player.pos.x;
+		//player.prev.y = player.pos.y;
 
 		// Key Input
 		if (rightPressed) {
-			obj.classList.remove("facingLeft", "facingUp", "facingDown", "stopped");
-			obj.classList.add("facingRight");
+			//obj.classList.remove("facingLeft", "facingUp", "facingDown", "stopped");
+			//obj.classList.add("facingRight");
 			//player.pos.x += steps;
 			emitData.playerDir = "right";
 			player.direction = 90;
 		} else if (leftPressed) {
-			obj.classList.remove("facingRight", "facingUp", "facingDown", "stopped");
-			obj.classList.add("facingLeft");
+			//obj.classList.remove("facingRight", "facingUp", "facingDown", "stopped");
+			//obj.classList.add("facingLeft");
 			//player.pos.x -= steps;
 			emitData.playerDir = "left";
 			player.direction = 270;
 		} else if (upPressed) {
-			obj.classList.remove("facingLeft", "facingRight", "facingDown", "stopped");
-			obj.classList.add("facingUp");
+			//obj.classList.remove("facingLeft", "facingRight", "facingDown", "stopped");
+			//obj.classList.add("facingUp");
 			//player.pos.y -= steps;
 			emitData.playerDir = "up";
 			player.direction = 0;
 		} else if (downPressed) {
-			obj.classList.remove("facingRight", "facingUp", "facingLeft", "stopped");
-			obj.classList.add("facingDown");
+			//obj.classList.remove("facingRight", "facingUp", "facingLeft", "stopped");
+			//obj.classList.add("facingDown");
 			//player.pos.y += steps;
 			emitData.playerDir = "down";
 			player.direction = 180;
 		} else {
-			obj.classList.add("stopped");
+			//obj.classList.add("stopped");
 			emitData.playerDir = null;
 		}
 
 		socket.emit('input info', emitData);
 
 		// Move player to position
-		obj.style.left = player.pos.x + "px";
-		obj.style.top = player.pos.y + "px";
+		//obj.style.left = player.pos.x + "px";
+		//obj.style.top = player.pos.y + "px";
 
-		// Activates collision detection for player
-		var update = false; //creates variable to hold whether the powerups have been moved or not
-		for (var ii = 0; ii < objectBlocks.length; ii++) {
-			var div = document.getElementById(objectBlocks[ii].id);
-			document.getElementById("health").innerHTML =
-				"Health: " + player.health + "/100";
-			document.getElementById("points").innerHTML = "Points: " + player.points;
-			if (
-				objectBlocks[ii].detectCollision(player.id, player, player.dimensions) ==
-				"med" ||
-				objectBlocks[ii].detectCollision(player.id, player, player.dimensions) ==
-				"coin"
-			) {
-				div = moveDiv(true, div, ii); //Calls function that will move the div to new location
-			}
-		}
+
 	}
 }
 
@@ -180,22 +165,42 @@ socket.on('user disconnected', function (player) {
 
 socket.on('updated', function (players) {
 	for (var id in players) {
-		var player = players[id];
-		if (!users.hasOwnProperty(player.id)) {
+		var playerNew = players[id];
+		if (!users.hasOwnProperty(playerNew.id)) {
 			let div = document.createElement('div');
-			div.id = player.id;
+			div.id = playerNew.id;
 			div.className = 'player facingRight';
 			document.body.appendChild(div);
 			//divs[player.id] = div;
 		}
-		let obj = document.getElementById(player.id)
-		obj.style.left = player.x + "px";
-		obj.style.top = player.y + "px"
+		let obj = document.getElementById(playerNew.id)
+		obj.style.left = playerNew.x + "px";
+		obj.style.top = playerNew.y + "px"
 		obj.classList.remove("facingRight", "facingUp", "facingLeft", "facingDown");
-		obj.classList.add(player.direction);;
+		obj.classList.add(playerNew.direction);;
 		//div.innerHTML = player.id;
 
-		users[player.id] = player;
+		document.getElementById("health").innerHTML = "Health: " + playerNew.health + "/100";
+		document.getElementById("points").innerHTML = "Points: " + playerNew.points;
+
+		// Activates collision detection for player
+		var update = false; //creates variable to hold whether the powerups have been moved or not
+		for (var ii = 0; ii < objectBlocks.length; ii++) {
+			var div = document.getElementById(objectBlocks[ii].id);
+			//document.getElementById("health").innerHTML = "Health: " + player.health + "/100";
+			//document.getElementById("points").innerHTML = "Points: " + player.points;
+			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med" || objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
+				div = moveDiv(true, div, ii); //Calls function that will move the div to new location
+			}
+			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med") {
+				socket.emit('med');
+			}
+			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
+				socket.emit('point');
+			}
+			console.log('wow')
+		}
+		users[playerNew.id] = playerNew;
 	}
 
 
@@ -581,16 +586,12 @@ function MyObject(xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 			Math.abs(xDiff) < Math.abs(xSize)
 		) {
 			if (this.type == "block") {
-				player.pos.y = player.prev.y; //if user collides with water stop them from moving further
-				player.pos.x = player.prev.x;
+				return "block"; // doesnt move character
 			} else if (this.type == "med") {
-				player.health += 25;
-				if (player.health > 100) {
-					player.health = 100;
-				} //if user collides with med kit increase health by 25 (max 100pts)
+				//if user collides with med kit increase health by 25 (max 100pts)
 				return "med";
 			} else if (this.type == "coin") {
-				player.points += 25; //if user collides with a coin increase points by 25
+
 				return "coin";
 			}
 			return true; // Collision detected
