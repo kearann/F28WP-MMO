@@ -256,6 +256,7 @@ function getData() {
 	var name = document.forms["username"]["uName"].value;
 	player.name = name;
 	emitData.name = name;
+	socket.emit('new_players', name);
 }
 
 popupStack = [];
