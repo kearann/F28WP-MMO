@@ -8,10 +8,10 @@ var io = require('socket.io')(http);
 app.use(express.static('client'));
 
 
-var players = [];
+let players = [];
 
 io.on('connection', function(socket){
-
+////////////////////////////////////////////////////////////////////////////
 	socket.on('new_players', function(usr){
 		players[socket.id] = {
 			username: usr,
@@ -20,24 +20,23 @@ io.on('connection', function(socket){
 			health: 100,
 			points: 0,
 		};
-		console.log(players[socket.id].username);
-
 	io.emit('new_player', players[socket.id]);
 	});
+////////////////////////////////////////////////////////////////////////////
+	socket.on('yikescode', function(bad_code){
 
-	socket.on('chat message', function(msg){
-		console.log(players[socket.id])
-		console.log("Before");
-		if(players[socket.id]){
-		console.log("After");
-	  io.emit('chat message', players[socket.id].username + ": " + msg);
-	};
 	});
 
+	
+	socket.on('chat message', function(msg){
+	  io.emit('chat message', msg.name + ": " + msg.message);
+	});
+///////////////////////////////////////////////////////////////////////////
 	socket.on('input info', function(usr){
 
 		if(usr.playerDir == "right"){ // x +=
-			players[socket.id].x += 5
+			players[socket.id].x += 5;
+			console.log(players[socket.id].username);
 		} else if(usr.playerDir == "down"){ //y +=
 			players[socket.id].y += 5;
 		} else if(usr.playerDir == "left"){ // x -=
@@ -48,7 +47,7 @@ io.on('connection', function(socket){
 
 		io.emit('input info', players[socket.id]);
 	});
-
+///////////////////////////////////////////////////////////////////////////
 	socket.on('disconnect', function(){
 		delete players[socket.id];
 		io.emit('user disconnected', players[socket.id]);
