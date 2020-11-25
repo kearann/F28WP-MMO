@@ -57,15 +57,19 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('med', function () {
-		players[socket.id].health += 25;
-		if (players[socket.id].health > 100) {
-			players[socket.id].health = 100;
+		if (players[socket.id]) {
+			players[socket.id].health += 25;
+			if (players[socket.id].health > 100) {
+				players[socket.id].health = 100;
+			}
 		}
 	});
 
 	socket.on('point', function () {
-		console.log('point added')
-		players[socket.id].points += 10;
+		if (players[socket.id]) {
+			console.log('point added' + players[socket.id].username)
+			players[socket.id].points += 10;
+		}
 	})
 
 	/////////////////////////////////////////////////////////////

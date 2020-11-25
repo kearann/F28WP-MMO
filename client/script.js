@@ -66,6 +66,7 @@ function keyDown(e) {
 		if (e.keyCode == 32) {
 			// spacebar
 			if (player.firing == false) {
+				console.log('spacepressed and calling arrow');
 				// Arrow dissapprears
 				callArrowMove();
 				player.firing = true;
@@ -180,24 +181,27 @@ socket.on('updated', function (players) {
 		obj.classList.add(playerNew.direction);;
 		//div.innerHTML = player.id;
 
-		document.getElementById("health").innerHTML = "Health: " + playerNew.health + "/100";
-		document.getElementById("points").innerHTML = "Points: " + playerNew.points;
 
-		// Activates collision detection for player
-		//creates variable to hold whether the powerups have been moved or not
-		for (var ii = 0; ii < objectBlocks.length; ii++) {
-			var div = document.getElementById(objectBlocks[ii].id);
-			//document.getElementById("health").innerHTML = "Health: " + player.health + "/100";
-			//document.getElementById("points").innerHTML = "Points: " + player.points;
 
-			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med") {
-				socket.emit('med');
-			}
-			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
-				socket.emit('point');
-			}
-			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med" || objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
-				div = moveDiv(true, div, ii); //Calls function that will move the div to new location
+		if (playerNew.username == player.name) {
+			document.getElementById("health").innerHTML = "Health: " + playerNew.health + "/100";
+			document.getElementById("points").innerHTML = "Points: " + playerNew.points;
+			// Activates collision detection for player
+			//creates variable to hold whether the powerups have been moved or not
+			for (var ii = 0; ii < objectBlocks.length; ii++) {
+				var div = document.getElementById(objectBlocks[ii].id);
+				//document.getElementById("health").innerHTML = "Health: " + player.health + "/100";
+				//document.getElementById("points").innerHTML = "Points: " + player.points;
+
+				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med") {
+					socket.emit('med');
+				}
+				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
+					socket.emit('point');
+				}
+				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med" || objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
+					div = moveDiv(true, div, ii); //Calls function that will move the div to new location
+				}
 			}
 		}
 
@@ -342,8 +346,8 @@ var clientWidth = document.body.clientWidth;
 
 function callArrowMove() {
 	id = new arrow(
-		player.pos.x + clientWidth * 0.025,
-		player.pos.y + clientHeight * 0.025,
+		users[socket.id].x + clientWidth * 0.025,
+		users[socket.id].y + clientHeight * 0.025,
 		clientWidth * 0.02,
 		clientHeight * 0.04,
 		"./imgs/arrow.png",
