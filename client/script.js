@@ -191,19 +191,14 @@ socket.on('updated', function (players) {
 			//document.getElementById("points").innerHTML = "Points: " + player.points;
 
 			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med") {
-				console.log('jed');
 				socket.emit('med');
 			}
 			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
-				console.log('wow');
 				socket.emit('point');
-
 			}
 			if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med" || objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
 				div = moveDiv(true, div, ii); //Calls function that will move the div to new location
 			}
-
-
 		}
 
 		users[playerNew.id] = playerNew;
