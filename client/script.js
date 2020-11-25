@@ -148,78 +148,81 @@ function keyUp(e) {
 
 /* Game loop */
 var fps = 60;
-if (emitData.name) {
-	console.log("starting gametick");
-	setInterval(gameTick, 1000 / fps);
-}
+
+
+setInterval(gameTick, 1000 / fps);
+
 
 function gameTick() {
-	var obj = document.getElementById(player.id);
+	if (emitData.name) {
+		var obj = document.getElementById(player.id);
 
-	// saves previous position before player is moved
-	player.prev.x = player.pos.x;
-	player.prev.y = player.pos.y;
+		// saves previous position before player is moved
+		player.prev.x = player.pos.x;
+		player.prev.y = player.pos.y;
 
-	// Key Input
-	if (rightPressed) {
-		obj.classList.remove("facingLeft", "facingUp", "facingDown", "stopped");
-		obj.classList.add("facingRight");
-		//player.pos.x += steps;
-		emitData.playerDir = "right";
-		player.direction = 90;
-	} else if (leftPressed) {
-		obj.classList.remove("facingRight", "facingUp", "facingDown", "stopped");
-		obj.classList.add("facingLeft");
-		//player.pos.x -= steps;
-		emitData.playerDir = "left";
-		player.direction = 270;
-	} else if (upPressed) {
-		obj.classList.remove("facingLeft", "facingRight", "facingDown", "stopped");
-		obj.classList.add("facingUp");
-		//player.pos.y -= steps;
-		emitData.playerDir = "up";
-		player.direction = 0;
-	} else if (downPressed) {
-		obj.classList.remove("facingRight", "facingUp", "facingLeft", "stopped");
-		obj.classList.add("facingDown");
-		//player.pos.y += steps;
-		emitData.playerDir = "down";
-		player.direction = 180;
-	} else {
-		obj.classList.add("stopped");
-		emitData.playerDir = null;
-	}
+		// Key Input
+		if (rightPressed) {
+			obj.classList.remove("facingLeft", "facingUp", "facingDown", "stopped");
+			obj.classList.add("facingRight");
+			//player.pos.x += steps;
+			emitData.playerDir = "right";
+			player.direction = 90;
+		} else if (leftPressed) {
+			obj.classList.remove("facingRight", "facingUp", "facingDown", "stopped");
+			obj.classList.add("facingLeft");
+			//player.pos.x -= steps;
+			emitData.playerDir = "left";
+			player.direction = 270;
+		} else if (upPressed) {
+			obj.classList.remove("facingLeft", "facingRight", "facingDown", "stopped");
+			obj.classList.add("facingUp");
+			//player.pos.y -= steps;
+			emitData.playerDir = "up";
+			player.direction = 0;
+		} else if (downPressed) {
+			obj.classList.remove("facingRight", "facingUp", "facingLeft", "stopped");
+			obj.classList.add("facingDown");
+			//player.pos.y += steps;
+			emitData.playerDir = "down";
+			player.direction = 180;
+		} else {
+			obj.classList.add("stopped");
+			emitData.playerDir = null;
+		}
 
-	socket.emit('input info', emitData);
+		socket.emit('input info', emitData);
 
-	// Move player to position
-	obj.style.left = player.pos.x + "px";
-	obj.style.top = player.pos.y + "px";
+		// Move player to position
+		obj.style.left = player.pos.x + "px";
+		obj.style.top = player.pos.y + "px";
 
-	// Activates collision detection for player
-	var update = false; //creates variable to hold whether the powerups have been moved or not
-	for (var ii = 0; ii < objectBlocks.length; ii++) {
-		var div = document.getElementById(objectBlocks[ii].id);
-		document.getElementById("health").innerHTML =
-			"Health: " + player.health + "/100";
-		document.getElementById("points").innerHTML = "Points: " + player.points;
-		if (
-			objectBlocks[ii].detectCollision(player.id, player, player.dimensions) ==
-			"med" ||
-			objectBlocks[ii].detectCollision(player.id, player, player.dimensions) ==
-			"coin"
-		) {
-			div = moveDiv(true, div, ii); //Calls function that will move the div to new location
+		// Activates collision detection for player
+		var update = false; //creates variable to hold whether the powerups have been moved or not
+		for (var ii = 0; ii < objectBlocks.length; ii++) {
+			var div = document.getElementById(objectBlocks[ii].id);
+			document.getElementById("health").innerHTML =
+				"Health: " + player.health + "/100";
+			document.getElementById("points").innerHTML = "Points: " + player.points;
+			if (
+				objectBlocks[ii].detectCollision(player.id, player, player.dimensions) ==
+				"med" ||
+				objectBlocks[ii].detectCollision(player.id, player, player.dimensions) ==
+				"coin"
+			) {
+				div = moveDiv(true, div, ii); //Calls function that will move the div to new location
+			}
 		}
 	}
 }
 
 // Receive movement data
+/*
 socket.on('input info', function (playerNewPos) {
 	player.pos.x = playerNewPos.x;
 	player.pos.y = playerNewPos.y;
 })
-
+*/
 function activechat(state) {
 	chatActive = state;
 }
