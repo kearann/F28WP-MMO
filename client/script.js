@@ -224,6 +224,11 @@ socket.on('input info', function (playerNewPos) {
 	player.pos.y = playerNewPos.y;
 })
 
+socket.on('user disconnected', function (player) {
+	var obj = document.getElementById(player.id);
+	obj.remove();
+})
+
 
 socket.on('updated', function(players) {
 	 for (var id in players) {
