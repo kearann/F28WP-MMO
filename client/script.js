@@ -215,9 +215,9 @@ function gameTick() {
 }
 
 // Receive movement data
-socket.on('input info', function (newx, newy) {
-	player.pos.x = newx;
-	player.pos.y = newy;
+socket.on('input info', function (playerNewPos) {
+	player.pos.x = playerNewPos.x;
+	player.pos.y = playerNewPos.y;
 })
 
 function activechat(state) {
