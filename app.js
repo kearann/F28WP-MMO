@@ -23,13 +23,10 @@ io.on('connection', function(socket){
 	io.emit('new_player', players[socket.id]);
 	});
 ////////////////////////////////////////////////////////////////////////////
-	socket.on('yikescode', function(bad_code){
-
-	});
-
-	
 	socket.on('chat message', function(msg){
+		if(msg.name && msg.message){
 	  io.emit('chat message', msg.name + ": " + msg.message);
+	 }
 	});
 ///////////////////////////////////////////////////////////////////////////
 	socket.on('input info', function(usr){
