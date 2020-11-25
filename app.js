@@ -33,12 +33,11 @@ io.on('connection', function(socket){
 
 		if(usr.playerDir == "right"){ // x +=
 			players[socket.id].x += 5;
-			console.log(players[socket.id].username);
 		} else if(usr.playerDir == "down"){ //y +=
 			players[socket.id].y += 5;
 		} else if(usr.playerDir == "left"){ // x -=
 			players[socket.id].x -= 5;
-		} else if(usr.up == "up"){ // y -=
+		} else if(usr.playerDir == "up"){ // y -=
 			players[socket.id].y -= 5;
 		}
 

@@ -217,12 +217,10 @@ function gameTick() {
 }
 
 // Receive movement data
-/*
 socket.on('input info', function (playerNewPos) {
 	player.pos.x = playerNewPos.x;
 	player.pos.y = playerNewPos.y;
 })
-*/
 function activechat(state) {
 	chatActive = state;
 }
@@ -864,9 +862,9 @@ for (var i = 0; i < 6; ++i) {
 		)
 	); //36 /32
 }
-
+var socket = io();
 $(function () {
-	var socket = io();
+	var players = [];
 	$("#chatForm").submit(function () {
 		var emitMSG = {
 			name: player.name,
@@ -881,3 +879,22 @@ $(function () {
 		$("#messages").append($("<li>").text(msg));
 	});
 });
+
+/*socket.on("input info", function (users){
+		if(players[socket.id]){
+			x = document.getElementById(socket.id);
+			x.style.left = users.x + "px";
+		    x.style.top = users.y + "px";
+		} else{
+			players[socket.id] = users;
+
+			$(function () {
+
+			//$("body").append('<div id=" + ' + socket.id +  '" class="player facingRight"></div>');
+		};
+		};
+	});*/
+
+	//socket.on("disconnected", function(users){
+	//	remove players[socket.id];
+//	});
