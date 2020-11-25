@@ -44,6 +44,7 @@ var chatActive = false;
 document.addEventListener("keydown", keyDown, false);
 document.addEventListener("keyup", keyUp, false);
 
+var users={};
 /*
 
 	e = e || window.event;	//if e doesn't exist in browser version use the window.event
@@ -154,6 +155,7 @@ setInterval(gameTick, 1000 / fps);
 
 
 function gameTick() {
+	socket.emit('update');
 	if (emitData.name) {
 		var obj = document.getElementById(player.id);
 
@@ -221,6 +223,28 @@ socket.on('input info', function (playerNewPos) {
 	player.pos.x = playerNewPos.x;
 	player.pos.y = playerNewPos.y;
 })
+
+
+socket.on('updated', function(players) {
+	 for (var id in players) {
+		var player = players[id];
+		if (!users.hasOwnProperty(player.id)){
+		  let div = document.createElement('div');
+		  div.id    = player.id;
+		  div.className = 'player facingRight';
+		  document.body.appendChild( div );
+		  //divs[player.id] = div;
+		}
+		let obj =document.getElementById(player.id)
+		obj.style.left = player.x + "px";
+		obj.style.top  = player.y + "px";
+		//div.innerHTML = player.id;
+
+	users[player.id] = player;}
+	
+		
+})
+
 function activechat(state) {
 	chatActive = state;
 }

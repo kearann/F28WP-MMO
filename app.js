@@ -8,12 +8,13 @@ var io = require('socket.io')(http);
 app.use(express.static('client'));
 
 
-let players = [];
+let players = {};
 
 io.on('connection', function(socket){
 ////////////////////////////////////////////////////////////////////////////
 	socket.on('new_players', function(usr){
 		players[socket.id] = {
+			id: socket.id,
 			username: usr,
 			x: 700,
 			y: 300,
@@ -48,7 +49,12 @@ io.on('connection', function(socket){
 		delete players[socket.id];
 		io.emit('user disconnected', players[socket.id]);
 	});
+  
+  /////////////////////////////////////////////////////////////
+  socket.on('update', function() {
+  io.emit('updated', players);
   });
+});
 
 http.listen(3000, function() {
 	console.log("Listening on port: 3000!");
