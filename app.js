@@ -21,6 +21,7 @@ io.on('connection', function (socket) {
 			direction: "facingRight",
 			health: 100,
 			points: 0,
+			stopped: "moving",
 		};
 		io.emit('new_player', players[socket.id]);
 	});
@@ -46,7 +47,8 @@ io.on('connection', function (socket) {
 			players[socket.id].y -= 5;
 			players[socket.id].direction = "facingUp";
 		}
-
+	
+		players[socket.id].stopped = usr.stopped;
 		//io.emit('input info', players[socket.id]);
 	});
 	///////////////////////////////////////////////////////////////////////////

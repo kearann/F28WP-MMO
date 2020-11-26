@@ -118,27 +118,32 @@ function gameTick() {
 			//player.pos.x += steps;
 			emitData.playerDir = "right";
 			player.direction = 90;
+			emitData.stopped = "moving";
 		} else if (leftPressed) {
 			//obj.classList.remove("facingRight", "facingUp", "facingDown", "stopped");
 			//obj.classList.add("facingLeft");
 			//player.pos.x -= steps;
 			emitData.playerDir = "left";
 			player.direction = 270;
+			emitData.stopped = "moving";
 		} else if (upPressed) {
 			//obj.classList.remove("facingLeft", "facingRight", "facingDown", "stopped");
 			//obj.classList.add("facingUp");
 			//player.pos.y -= steps;
 			emitData.playerDir = "up";
 			player.direction = 0;
+			emitData.stopped = "moving";
 		} else if (downPressed) {
 			//obj.classList.remove("facingRight", "facingUp", "facingLeft", "stopped");
 			//obj.classList.add("facingDown");
 			//player.pos.y += steps;
 			emitData.playerDir = "down";
 			player.direction = 180;
+			emitData.stopped = "moving";
 		} else {
 			//obj.classList.add("stopped");
 			emitData.playerDir = null;
+			emitData.stopped = "stopped";
 		}
 
 		socket.emit('input info', emitData);
@@ -190,8 +195,11 @@ socket.on('updated', function (players) {	//when database returns the updated pl
 		let obj = document.getElementById(playerNew.id)	
 		obj.style.left = playerNew.x + "px";	//sets x and y position the div for current playerNew  
 		obj.style.top = playerNew.y + "px"
-		obj.classList.remove("facingRight", "facingUp", "facingLeft", "facingDown");	//remove previous classes which change sprite direction
-		obj.classList.add(playerNew.direction);;	//add the class list to point sprite in correct direction
+		obj.classList.remove("facingRight", "facingUp", "facingLeft", "facingDown","moving","stopped");	//remove previous classes which change sprite direction
+		obj.classList.add(playerNew.direction);	//add the class list to point sprite in correct direction
+		obj.classList.add(playerNew.stopped);
+		console.log(playerNew.stopped);
+		
 
 
 
@@ -238,6 +246,7 @@ socket.on('updated', function (players) {	//when database returns the updated pl
 		obj.style.top = playerNew.y + "px";
 		obj.classList.remove("facingRight", "facingUp", "facingLeft", "facingDown");
 		obj.classList.add(playerNew.direction);;
+		
 
 		users[playerNew.id] = playerNew;
 
@@ -250,8 +259,10 @@ socket.on('leaderboard', function (leaderboard){
 	
 	socket.emit('searchLeaderboard');
 	socket.on('leadPos', function(data){
-	playerRank = data;})
+		playerRank = data;
+		})
 	
+	if (typeof playerRank !== 'undefined'){
 	if (leaderboard[0]){
 		if (playerRank.rank ==1){
 			document.getElementById("first").innerHTML = playerRank.rank+". " + playerRank.name + " : " + playerRank.points;
@@ -291,7 +302,7 @@ socket.on('leaderboard', function (leaderboard){
 	}
 		
 	
-})
+}})
 
 function activechat(state) {	
 	chatActive = state;
