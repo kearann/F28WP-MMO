@@ -70,11 +70,41 @@ io.on('connection', function (socket) {
 			players[socket.id].points += 10;
 		}
 	})
+	
+	
+	
+	socket.on('arrow', function(angle){
+		var arrow={};
+		arrow.x = players[socket.id].x;
+		arrow.y = players[socket.id].y;
+		arrow.angle = angle;
+		arrow.id = socket.id;
+		io.emit('fire', arrow);
+	})
+	
+	socket.on('getId', function(){
+		if (players[socket.id]){
+		socket.emit('returnId',players[socket.id].id);
+	}})
 
+	socket.on('hit', function(){
+		if (players[socket.id]){
+			players[socket.id].health -= 25;
+			if (players[socket.id].health <= 0){
+			io.emit('dead',players[socket.id]);
+			delete players[socket.id];
+			}
+		
+	}})
 	/////////////////////////////////////////////////////////////
 	socket.on('update', function () {
 		io.emit('updated', players);
 	});
+	
+	socket.on('dead', function(){
+		io.emit('user disconnected', players[socket.id]);
+		delete players[socket.id];
+	})
 });
 
 http.listen(3000, function () {

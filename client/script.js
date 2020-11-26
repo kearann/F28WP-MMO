@@ -6,6 +6,7 @@ document.body.style.backgroundRepeat = "repeat";
 var clientHeight = document.body.clientHeight;
 var clientWidth = document.body.clientWidth;
 var socket = io();
+var sessionId = null;
 
 // Player object
 var player = {
@@ -39,7 +40,7 @@ var leftPressed = false;
 var upPressed = false;
 var downPressed = false;
 var spacePressed = false;
-var chatActive = false;
+var chatActive = false;	//creates variable to hold a boolean variable for whether or not the user is in the chat
 
 document.addEventListener("keydown", keyDown, false);
 document.addEventListener("keyup", keyUp, false);
@@ -68,7 +69,7 @@ function keyDown(e) {
 			if (player.firing == false) {
 				console.log('spacepressed and calling arrow');
 				// Arrow dissapprears
-				callArrowMove();
+				socket.emit('arrow', player.direction);
 				player.firing = true;
 				setTimeout(firingFalse, 500);
 			}
@@ -98,11 +99,11 @@ function keyUp(e) {
 var fps = 60;
 
 
-setInterval(gameTick, 1000 / fps);
+setInterval(gameTick, 1000 / fps);	//creates an inverval that runs the function gameTick 60 times a second
 
 
 function gameTick() {
-	socket.emit('update');
+	socket.emit('update');	//sends request to server for update of all player positions
 	if (emitData.name) {
 		var obj = document.getElementById(player.id);
 
@@ -158,28 +159,39 @@ socket.on('input info', function (playerNewPos) {
 })
 */
 
-socket.on('user disconnected', function (player) {
-	var obj = document.getElementById(player.id);
-	obj.remove();
+socket.on('user disconnected', function (player) {	//when a message is recieved from server for when a user disconnects 
+	if (player){
+	var obj = document.getElementById(player.id);	
+	obj.remove();}	//remove the div object for that player from map
 })
 
 
-socket.on('updated', function (players) {
-	for (var id in players) {
-		var playerNew = players[id];
-		if (!users.hasOwnProperty(playerNew.id)) {
-			let div = document.createElement('div');
-			div.id = playerNew.id;
-			div.className = 'player facingRight';
-			document.body.appendChild(div);
-			//divs[player.id] = div;
+socket.on ('dead', function (Id){	//if server sends response saying someone has died
+	if (Id.id == sessionId){	//if the user who has died is the client show dead menu popup
+		showPopup(dead);	
+		document.getElementById("score").innerHTML +=  Id.points;} //Add points to popup paragraph with Id 'score'
+	else {
+		if (Id){	//if Id isn't the same as the client AND is not null
+			var obj = document.getElementById(Id.id);	
+			obj.remove();		//remove the div object for the player who died from map
+			delete users[Id];	//delete the player from 'users' 
 		}
-		let obj = document.getElementById(playerNew.id)
-		obj.style.left = playerNew.x + "px";
+	}
+})
+socket.on('updated', function (players) {	//when database returns the updated player details list
+	for (var id in players) {	//loop through each player in list
+		 playerNew = players[id];	//store value of current player in 'playerNew'
+		if (!users.hasOwnProperty(playerNew.id)) {	//if player doesn't already exist in 'users' then create a div for it  
+			let div = document.createElement('div');	
+			div.id = playerNew.id;			//sets id of div to that players socket id (from server)
+			div.className = 'player facingRight';	//add class to div to add formatting of sprite
+			document.body.appendChild(div);	//add new player div to body
+		}
+		let obj = document.getElementById(playerNew.id)	
+		obj.style.left = playerNew.x + "px";	//sets x and y position the div for current playerNew  
 		obj.style.top = playerNew.y + "px"
-		obj.classList.remove("facingRight", "facingUp", "facingLeft", "facingDown");
-		obj.classList.add(playerNew.direction);;
-		//div.innerHTML = player.id;
+		obj.classList.remove("facingRight", "facingUp", "facingLeft", "facingDown");	//remove previous classes which change sprite direction
+		obj.classList.add(playerNew.direction);;	//add the class list to point sprite in correct direction
 
 
 
@@ -190,15 +202,13 @@ socket.on('updated', function (players) {
 			//creates variable to hold whether the powerups have been moved or not
 			for (var ii = 0; ii < objectBlocks.length; ii++) {
 				var div = document.getElementById(objectBlocks[ii].id);
-				//document.getElementById("health").innerHTML = "Health: " + player.health + "/100";
-				//document.getElementById("points").innerHTML = "Points: " + player.points;
 
 				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med") {
 					socket.emit('med');
 				}
 				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
 					socket.emit('point');
-				}
+				} 
 				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med" || objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
 					div = moveDiv(true, div, ii); //Calls function that will move the div to new location
 				}
@@ -211,7 +221,7 @@ socket.on('updated', function (players) {
 
 })
 
-function activechat(state) {
+function activechat(state) {	
 	chatActive = state;
 }
 
@@ -224,25 +234,18 @@ function loopObjects() {
 	}
 }
 
-function moveDiv(moved, div, ii) {
-	if (moved) {
-		div.style.left =
-			getRandomIntInclusive(50, document.body.clientWidth - 50) + "px";
+function moveDiv(moved, div, ii) {	//function to move power up divs to new position 
+	if (moved) {	//if div needs to be moved again (currently not in suitable position)
+		div.style.left =	
+			getRandomIntInclusive(50, document.body.clientWidth - 50) + "px";	//sets div position to random x and y coordinate
 		div.style.top =
 			getRandomIntInclusive(50, document.body.clientHeight - 50) + "px";
 	}
 	var update = true;
-	while (update) {
-		//while new div position is unsuitable
-		for (var count = 0; count < objectBlocks.length; count++) {
-			if (
-				objectBlocks[count].detectOverlap(
-					objectBlocks[ii].id,
-					objectBlocks[ii].type
-				)
-			) {
-				//if new position of div is unsuitable (overlaps with blocking object) then it is moved again
-				moveDiv(true, div, ii);
+	while (update) { //while new div position is still unsuitable
+		for (var count = 0; count < objectBlocks.length; count++) { 
+			if (objectBlocks[count].detectOverlap(objectBlocks[ii].id, objectBlocks[ii].type)) { //loop through all other blocking objects and check if coordinates intersect
+				moveDiv(true, div, ii); // if they are move div again
 			} else {
 				update = false; //if div has been moved to suitable position then loop can end
 			}
@@ -321,9 +324,23 @@ var help = `
 	</div>
 `;
 
-//***new code***
+var dead = // creates variable which holds html code for when a player dies
+`
+	<br><br>
+	<div class="pauseMenu">
+		 <h1>YOU DIED.</h1> 
+		 <br>
+		 <p id ="score">
+		 Your High Score Was:  
+		 </p>
+		
+		<button class="button" onclick="window.location.reload();">Retry</button>
+	</div>
+`;
+
+
 var form1 = `<div class="buttonContainer" style="top:110px;">
-			<form name="username" action="*.php" onsubmit="getData();closePopup(1);" >
+			<form name="username"  onsubmit="getData();closePopup(1);" >
   <input class="button" style="width:100%;" type="text" id="uName" name="uName" autofocus placeholder="Enter Username">
   <br><br>
   <input class="button" type="submit" value="Submit">
@@ -335,7 +352,7 @@ showPopup(play);
 
 var objectBlocks = [];
 
-function getRandomIntInclusive(min, max) {
+function getRandomIntInclusive(min, max) { // **function taken from Dr B Kenwright** which takes in two numbers and outputs a random number between them (inclusive)
 	min = Math.ceil(min);
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
@@ -344,24 +361,32 @@ function getRandomIntInclusive(min, max) {
 var clientHeight = document.body.clientHeight;
 var clientWidth = document.body.clientWidth;
 
-function callArrowMove() {
+socket.on('fire', function(arrow){	//when a message is recieved from server for when an arrow has been fired
+	callArrowMove(arrow.x, arrow.y, arrow.angle, arrow.id); //creates and moves an new arrow using the starting coordinates, angle and id of shooter from server
+})
+
+function callArrowMove(x, y, dir, id) {	//recieves position, angle and shooter info and creates new arrow object from that
 	id = new arrow(
-		users[socket.id].x + clientWidth * 0.025,
-		users[socket.id].y + clientHeight * 0.025,
+		x + clientWidth * 0.025,
+		y + clientHeight * 0.025,
 		clientWidth * 0.02,
 		clientHeight * 0.04,
 		"./imgs/arrow.png",
-		player.direction
+		dir,
+		id
+		
 	);
-	id.movearrow();
+
+	id.movearrow();	//starts movearrow method on the arrow (id)
 }
 
-function firingFalse() {
+function firingFalse() {	//function that sets player.firing to false which will be used to restrict fire rate
 	player.firing = false;
 }
 
-var arrowId = 0; //variable to hold the next new ID number
-function arrow(xx, yy, clientWidth, clientHeight, img, direction) {
+var arrowId = 0; //variable to hold the next new arrow ID number
+function arrow(xx, yy, clientWidth, clientHeight, img, direction, id) {
+	var userId = id;
 	this.id = "arrowids" + arrowId;
 	this.pos = { x: xx, y: yy };
 	this.startPos = { x: xx, y: yy };
@@ -374,11 +399,11 @@ function arrow(xx, yy, clientWidth, clientHeight, img, direction) {
 		this.div.style.top = this.pos.y + "px";
 	};
 
-	this.movearrow = function () {
+	this.movearrow = function () {	//function which controlls arrow movement
 		var axis = null;
 		var closest = null;
-		if (this.angle == 0) {
-			for (var i = 0; i < objectBlocks.length; i++) {
+		if (this.angle == 0) { //if angle is 0 (arrow pointing up) find the first blocking object in its path
+			for (var i = 0; i < objectBlocks.length; i++) {	//loops through all blocking objects
 				if (
 					objectBlocks[i].pos.y + parseInt(objectBlocks[i].div.style.height) <
 					this.pos.y &&
@@ -390,18 +415,19 @@ function arrow(xx, yy, clientWidth, clientHeight, img, direction) {
 						parseInt(objectBlocks[i].div.style.height) -
 						this.pos.y >
 						closest) &&
-					objectBlocks[i].type == "block"
+					objectBlocks[i].type == "block"		
 				) {
-					closest =
+					closest =	//if current object is in the arrows path, closer than current 'closest' object and a blocking object then set 'closest' to its distance from arrow 
 						objectBlocks[i].pos.y +
 						parseInt(objectBlocks[i].div.style.height) -
 						this.pos.y +
 						5;
 				}
 			}
-			axis = "y";
-		} else if (this.angle == 180) {
-			for (var i = 0; i < objectBlocks.length; i++) {
+			axis = "y"; //sets axis to y to be used later for direction of moving arrow
+		
+		} else if (this.angle == 180) { //if angle is 180 (arrow pointing down) find the first blocking object in its path
+			for (var i = 0; i < objectBlocks.length; i++) {	//loops through all blocking objects
 				if (
 					objectBlocks[i].pos.y >
 					this.pos.y + parseInt(this.div.style.height) &&
@@ -414,15 +440,16 @@ function arrow(xx, yy, clientWidth, clientHeight, img, direction) {
 						closest) &&
 					objectBlocks[i].type == "block"
 				) {
-					closest =
+					closest =	//if current object is in the arrows path, closer than current 'closest' object and a blocking object then set 'closest' to its distance from arrow 
 						objectBlocks[i].pos.y -
 						(this.pos.y + parseInt(this.div.style.height)) +
 						5;
 				}
 			}
-			axis = "y";
-		} else if (this.angle == 90) {
-			for (var i = 0; i < objectBlocks.length; i++) {
+			axis = "y"; //sets axis to y to be used later for direction of moving arrow
+			
+		} else if (this.angle == 90) {	//if angle is 90 (arrow pointing right) find the first blocking object in its path
+			for (var i = 0; i < objectBlocks.length; i++) { //loops through all blocking objects
 				if (
 					objectBlocks[i].pos.x > this.pos.x + parseInt(this.div.style.width) &&
 					objectBlocks[i].pos.y <= this.pos.y + 20 &&
@@ -434,15 +461,16 @@ function arrow(xx, yy, clientWidth, clientHeight, img, direction) {
 						closest) &&
 					objectBlocks[i].type == "block"
 				) {
-					closest =
+					closest =	//if current object is in the arrows path, closer than current 'closest' object and a blocking object then set 'closest' to its distance from arrow 
 						objectBlocks[i].pos.x -
 						(this.pos.x + parseInt(this.div.style.width)) +
 						5;
 				}
 			}
-			axis = "x";
-		} else if (this.angle == 270) {
-			for (var i = 0; i < objectBlocks.length; i++) {
+			axis = "x"; //sets axis to x to be used later for direction of moving arrow
+			
+		} else if (this.angle == 270) { //if angle is 270 (arrow pointing left) find the first blocking object in its path
+			for (var i = 0; i < objectBlocks.length; i++) {	//loops through all blocking objects
 				if (
 					objectBlocks[i].pos.x + parseInt(objectBlocks[i].div.style.width) <
 					this.pos.x &&
@@ -456,57 +484,88 @@ function arrow(xx, yy, clientWidth, clientHeight, img, direction) {
 						closest) &&
 					objectBlocks[i].type == "block"
 				) {
-					closest =
+					closest =	//if current object is in the arrows path, closer than current 'closest' object and a blocking object then set 'closest' to its distance from arrow 
 						objectBlocks[i].pos.x +
 						parseInt(objectBlocks[i].div.style.width) -
 						this.pos.x +
 						5;
 				}
 			}
-			axis = "x";
+			axis = "x";	//sets axis to x to be used later for direction of moving arrow
 		}
 
-		var position = 0;
-		var move = 0;
-		var id = setInterval(frame, 5);
-		var obj = document.getElementById(this.id);
+		var position = 0; //creates variable to store the distance travelled by arrow (init 0)
+		var move = 0; //creates a variable to store how far to move across axis in each step
+		var id = setInterval(frame, 5);	//creates interval which runs the function 'frame' every 5 seconds
+		var obj = document.getElementById(this.id);	
 		function frame() {
-			if (
-				Math.abs(position) >= Math.abs(closest) ||
-				position > clientHeight * 18 ||
-				position < -clientHeight * 18
-			) {
-				clearInterval(id);
-				obj.remove();
-			} else if (position < closest) {
-				position++;
-				move = 1;
-			} else if (position > closest) {
-				position--;
-				move = -1;
-			}
-			if (axis == "y") {
-				obj.style.top = parseInt(obj.style.top) + move + "px";
-			} else {
-				obj.style.left = parseInt(obj.style.left) + move + "px";
-			}
-		}
-	};
+			if (!sessionId){	//if the users socket id hasn't been stored request it from server
+				socket.emit('getId');
+				socket.on('returnId', function(id){
+				sessionId = id;	//store the returned id
+			})}
+			
+			let playerData = document.getElementById(sessionId);	//get and store the clients player div 
+			if (playerData != null){ //if playerdata is a valid defined div 
 
-	this.div = document.createElement("div");
-	this.div.id = this.id;
-	this.div.className = "block";
+				if (obj.style.top <  ((parseInt(playerData.style.top) +  playerData.offsetHeight )+"px" )  &&  
+					obj.style.top >  playerData.style.top && 
+					obj.style.left <  ((parseInt(playerData.style.left) +  playerData.offsetWidth )+"px" ) &&
+					obj.style.left >  playerData.style.left && userId != sessionId){
+												//if arrow was fired by another user and collides with the clients sprite 
+						socket.emit('hit');		//send a message to server that the client has been hit (server will update health)	
+						clearInterval(id);		//cancels the interval which was running the frame function on a loop
+						obj.remove();			//removes the arrow div from the map
+				}
+				for (var enemy in users){	//loops through each player in 'users'
+					let enemyData = document.getElementById(enemy);
+						if (enemy != sessionId && enemyData){	//if user is not the client AND a valid div 
+							
+							if (obj.style.top <  ((parseInt(enemyData.style.top) +  enemyData.offsetHeight )+"px" )  &&  
+							obj.style.top + 5 >  enemyData.style.top && 
+							obj.style.left <  ((parseInt(enemyData.style.left) +  enemyData.offsetWidth )+"px" ) &&
+							obj.style.left >  enemyData.style.left && userId != enemy){
+													//if arrow was fired by anyone other than the enemy sprite its collided with
+								clearInterval(id);	//cancels the interval which was running the frame function on a loop
+								obj.remove();		//removes the arrow div from the map
+								
+				}}}
+				if (
+					Math.abs(position) >= Math.abs(closest) || //if the distance travelled is greater or equal to the distance from first blick
+					position > clientHeight * 18 ||		//or distance travelled is greater than the max its allowed 
+					position < -clientHeight * 18
+				) {
+					clearInterval(id);	//cancel the interval which was running the frame function on a loop
+					obj.remove();		////remove the arrow div from the map
+				} else if (position < closest) {	//if distance travelled is less than distance to closest block
+					position++;	//increment position counter by 1
+					move = 1;	//set moved to 1 (distance of step = 1)
+				} else if (position > closest) {	//if distance travelled is greater than distance to closest block
+					position--;	//increment position counter by -1
+					move = -1;	//set moved to -1 (distance of step is back 1)
+				}
+				if (axis == "y") {	//if arrow is travelling along y axis move arrows y coordinate by 'move'
+					obj.style.top = parseInt(obj.style.top) + move + "px";
+				} else {	//if arrow is travelling along x axis move arrows x coordinate by 'move'
+					obj.style.left = parseInt(obj.style.left) + move + "px";
+				}
+		}
+	}};
+
+	this.div = document.createElement("div");	//creates new div object 
+	this.div.id = this.id;	//sets divs id to the id created earlier in function
+	this.div.className = "block";	//sets the arrows class name to block
 	this.div.style.width = clientWidth;
-	this.div.style.height = clientHeight;
+	this.div.style.height = clientHeight;	//sets width and height 
 	this.div.style.position = "absolute";
 	this.div.pos = { x: xx, y: yy };
-	this.div.style.left = this.pos.x + "px";
-	this.div.style.top = this.pos.y + "px";
-	this.div.style.zIndex = -5;
-	this.div.style.backgroundImage = "url('" + img + "')";
-	this.div.style.backgroundSize = "100% 100%";
-	this.div.style.transform = "rotate(" + this.angle + "deg)";
-	document.body.appendChild(this.div);
+	this.div.style.left = this.pos.x + "px";		
+	this.div.style.top = this.pos.y + "px";	//sets the position of div
+	this.div.style.zIndex = -5;	//sets zindex (layer level) to -5
+	this.div.style.backgroundImage = "url('" + img + "')"; //fills background of div with image of arrow
+	this.div.style.backgroundSize = "100% 100%";	//ensures img fills the whole div
+	this.div.style.transform = "rotate(" + this.angle + "deg)";	//rotates the arrow div to angle of movement
+	document.body.appendChild(this.div);	//adds final div element to the document
 
 	this.dimensions = {
 		x: this.div.style.offsetWidth,
@@ -515,7 +574,7 @@ function arrow(xx, yy, clientWidth, clientHeight, img, direction) {
 
 	this.update();
 }
-////////END NEW CODE///////
+
 
 var newId = 0; //variable to hold the next new ID number
 function MyObject(xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
@@ -530,7 +589,7 @@ function MyObject(xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 		this.div.style.top = this.pos.y + "px";
 	};
 
-	//START OF ADDED CODE
+
 
 	this.detectOverlap = function (id1, type) {
 		object1Info = document.getElementById(this.id);
@@ -566,7 +625,7 @@ function MyObject(xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 		return false; // No collision
 	};
 
-	//END OF ADDED CODE
+
 
 	this.detectCollision = function (playerID, player, dimensions, type) {
 		playerInfo = document.getElementById(playerID);
@@ -617,10 +676,7 @@ function MyObject(xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 	this.div.style.backgroundSize = imgX + "% " + imgY + "%";
 	document.body.appendChild(this.div);
 
-	this.dimensions = {
-		x: this.div.style.offsetWidth,
-		y: this.div.style.offsetHeight,
-	};
+	
 
 	this.update();
 }
