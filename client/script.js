@@ -195,30 +195,102 @@ socket.on('updated', function (players) {	//when database returns the updated pl
 
 
 
-		if (playerNew.username == player.name) {
+				if (playerNew.username == player.name) {
 			document.getElementById("health").innerHTML = "Health: " + playerNew.health + "/100";
 			document.getElementById("points").innerHTML = "Points: " + playerNew.points;
 			// Activates collision detection for player
 			//creates variable to hold whether the powerups have been moved or not
 			for (var ii = 0; ii < objectBlocks.length; ii++) {
 				var div = document.getElementById(objectBlocks[ii].id);
-
-				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med") {
+				//document.getElementById("health").innerHTML = "Health: " + player.health + "/100";
+				//document.getElementById("points").innerHTML = "Points: " + player.points;
+				var doesCollide = objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions);
+				var doesCollideBool = false;
+				if (doesCollide == "med") {
 					socket.emit('med');
 				}
-				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
+				if (doesCollide == "coin") {
 					socket.emit('point');
-				} 
-				if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "med" || objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "coin") {
+				}
+				if (doesCollide == "med" || doesCollide == "coin") {
 					div = moveDiv(true, div, ii); //Calls function that will move the div to new location
+				}
+				if (doesCollide == "block") {
+					if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "block") {
+						if (playerNew.direction == "facingRight") {
+							playerNew.x -= 10;
+						} else if (playerNew.direction == "facingLeft") {
+							playerNew.x += 10;
+						} else if (playerNew.direction == "facingDown") {
+							playerNew.y -= 10;
+						} else if (playerNew.direction == "facingUp") {
+							playerNew.y += 10;
+						}
+					}
+					socket.emit('hit block', playerNew);
 				}
 			}
 		}
 
+
+
+		obj.style.left = playerNew.x + "px";
+		obj.style.top = playerNew.y + "px";
+		obj.classList.remove("facingRight", "facingUp", "facingLeft", "facingDown");
+		obj.classList.add(playerNew.direction);;
+
 		users[playerNew.id] = playerNew;
+
 	}
 
 
+})
+
+socket.on('leaderboard', function (leaderboard){
+	
+	socket.emit('searchLeaderboard');
+	socket.on('leadPos', function(data){
+	playerRank = data;})
+	
+	if (leaderboard[0]){
+		if (playerRank.rank ==1){
+			document.getElementById("first").innerHTML = playerRank.rank+". " + playerRank.name + " : " + playerRank.points;
+			document.getElementById("first").style.color = "green";
+		} else{
+			document.getElementById("first").innerHTML = "1. " + leaderboard[0].username + " : " + leaderboard[0].points;
+			document.getElementById("first").style.color = "white";
+		}
+	} else{document.getElementById("first").innerHTML =" ";}
+	
+	if (leaderboard[1]){
+		if (playerRank.rank ==2){
+			document.getElementById("second").innerHTML = playerRank.rank+". " + playerRank.name + " : " + playerRank.points;
+			document.getElementById("second").style.color = "green";
+		} else{
+			document.getElementById("second").innerHTML = "2. " + leaderboard[1].username + " : " + leaderboard[1].points;
+			document.getElementById("second").style.color = "white";
+		}
+	}else{document.getElementById("second").innerHTML =" ";}
+	if (leaderboard[2]){
+		if (playerRank.rank ==3){
+			document.getElementById("third").innerHTML = playerRank.rank+". " + playerRank.name + " : " + playerRank.points;
+			document.getElementById("third").style.color = "green";
+		} else{
+			document.getElementById("third").innerHTML = "3. " + leaderboard[2].username + " : " + leaderboard[2].points;
+			document.getElementById("third").style.color = "white";
+		}
+	}else{document.getElementById("third").innerHTML =" ";}
+	if (playerRank.rank > 3){
+			document.getElementById("place").innerHTML = playerRank.rank+". " + playerRank.name + " : " + playerRank.points;
+			document.getElementById("place").style.color = "green";
+	} else {
+		if (leaderboard[3]){
+			document.getElementById("place").innerHTML = "4. " + leaderboard[3].username + " : " + leaderboard[3].points;
+			document.getElementById("place").style.color = "white";
+		}else{document.getElementById("place").innerHTML =" ";}
+	}
+		
+	
 })
 
 function activechat(state) {	
@@ -399,7 +471,7 @@ function arrow(xx, yy, clientWidth, clientHeight, img, direction, id) {
 		this.div.style.top = this.pos.y + "px";
 	};
 
-	this.movearrow = function () {	//function which controlls arrow movement
+	this.movearrow = function () {	//function which controls arrow movement
 		var axis = null;
 		var closest = null;
 		if (this.angle == 0) { //if angle is 0 (arrow pointing up) find the first blocking object in its path
