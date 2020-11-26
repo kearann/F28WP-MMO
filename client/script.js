@@ -200,7 +200,6 @@ socket.on('updated', function (players) {
 					div = moveDiv(true, div, ii); //Calls function that will move the div to new location
 				}
 				if (doesCollide == "block") {
-					console.log('BLOCKOMODE');
 					if (objectBlocks[ii].detectCollision(playerNew.id, playerNew, player.dimensions) == "block") {
 						if (playerNew.direction == "facingRight") {
 							playerNew.x -= 10;
