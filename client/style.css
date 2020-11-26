@@ -30,7 +30,7 @@
 }
 
 #leaderboard {
-	top: 5px;
+  top: 5px;
   right: 5px;
   position: absolute;
   width: 12.5%;
@@ -40,16 +40,16 @@
   z-index: 20;
 }
 
-.tableHead{
+.tableHead {
   font: 1 vw "Arial", sans-serif;
   color: white;
   height: 20%;
   padding: 0px;
 }
 
-.table{
-  font-size: 0.9 vw ;
-  font-family:"Arial", sans-serif;
+.table {
+  font-size: 0.9 vw;
+  font-family: "Arial", sans-serif;
   color: white;
   height: 20%;
   padding: 0px;
@@ -175,7 +175,7 @@ h2 {
   right: 5px;
   width: 15%;
   height: 15%;
- background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.8);
   overflow: hidden;
 }
 
@@ -184,9 +184,9 @@ h2 {
   margin-left: 10px;
   list-style-type: none;
   position: absolute;
-  bottom: 20%;
+  bottom: 25%;
   overflow: auto;
-  font: bold 18px Arial, sans-serif;
+  font: bold 12px Arial, sans-serif;
   color: rgb(41, 41, 41);
 }
 
@@ -199,12 +199,13 @@ h2 {
 
 #chatTextBox {
   padding: 10px;
-  width: 80%;
+  width: 70%;
 }
 
 #chatButton {
-  padding: 10px;
-  width: 20%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 30%;
 }
 
 ul {
