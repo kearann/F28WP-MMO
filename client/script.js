@@ -400,7 +400,11 @@ var help = `
 		 <h2>Help</h2> 
 		 <br>
 		 <p>
-		 **Game Instructions**
+		 Game Objective: collect coins to gain points and kill other players
+		 Movement: use arrow keys to to move player
+		 Attack: press the spacebar to shoot an arrow
+		 Health: collect cheese to regenerate health
+		 Points: collect coins to gain points to reach the top of the leaderboard
 		 </p>
 		 
 		<button class="button" onclick="closePopup();">Back</button>
