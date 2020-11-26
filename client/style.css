@@ -43,10 +43,12 @@
 
 p {
   font-size: 1.2vw;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 h2 {
   font-size: 1.6vw;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .buttonContainer {
@@ -71,7 +73,7 @@ h2 {
 }
 .pauseMenu {
   width: 40%;
-  background: #e0e0e0;
+  background: white;
   margin: auto;
   position: relative;
   z-index: 10;
