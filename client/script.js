@@ -678,7 +678,7 @@ function MyObject(xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 
 
 
-	this.detectOverlap = function (id1, type) {
+	this.detectOverlap = function (id1, type) {	//function that is called to detect whether a power up is overlapping with a wall/ blocking object
 		object1Info = document.getElementById(this.id);
 		var object1Width = object1Info.offsetWidth;
 		var object1Height = object1Info.offsetHeight;
@@ -692,19 +692,19 @@ function MyObject(xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 		var object2Top = object2Info.offsetTop;
 
 		var xDiff =
-			object1Left + object1Width / 2 - (object2Left + object2Width / 2);
+			object1Left + object1Width / 2 - (object2Left + object2Width / 2);	//calculates the distance between the two objects (player and this.object) along both x and y axis
 		var yDiff =
 			object1Top + object1Height / 2 - (object2Top + object2Height / 2);
 
-		var xSize = (object1Width + object2Width) / 2;
+		var xSize = (object1Width + object2Width) / 2;	//stores the average size of the 2 objects for both x and y
 		var ySize = (object1Height + object2Height) / 2;
 
 		if (
-			Math.abs(yDiff) < Math.abs(ySize) &&
-			Math.abs(xDiff) < Math.abs(xSize)
+			Math.abs(yDiff) < Math.abs(ySize) &&	//if the distance between the two objects is less than the size of two objects they overlap
+			Math.abs(xDiff) < Math.abs(xSize)	
 		) {
 			if (this.type == "block" && type != "block") {
-				return true; // Collision detected
+				return true; // Collision detected		//if block type is a blocking object then return true
 			}
 
 			return false;
@@ -726,17 +726,17 @@ function MyObject(xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 		var objectLeft = objectInfo.offsetLeft;
 		var objectTop = objectInfo.offsetTop;
 
-		var xDiff = playerLeft + playerWidth / 2 - (objectLeft + objectWidth / 2);
+		var xDiff = playerLeft + playerWidth / 2 - (objectLeft + objectWidth / 2);	//calculates the distance between the two objects (player and this.object) along both x and y axis
 		var yDiff = playerTop + playerHeight / 2 - (objectTop + objectHeight / 2);
 
-		var xSize = (playerWidth + objectWidth) / 2;
+		var xSize = (playerWidth + objectWidth) / 2;	//stores the average size of the 2 objects for both x and y
 		var ySize = (playerHeight + objectHeight) / 2;
 
 		if (
-			Math.abs(yDiff) < Math.abs(ySize) &&
+			Math.abs(yDiff) < Math.abs(ySize) &&	//if the distance between the two objects is less than the size of two objects they overlap
 			Math.abs(xDiff) < Math.abs(xSize)
 		) {
-			if (this.type == "block") {
+			if (this.type == "block") {	//so return the type of object to be used to work out what operation to preform upon collision
 				return "block"; // doesnt move character
 			} else if (this.type == "med") {
 				//if user collides with med kit increase health by 25 (max 100pts)
@@ -765,7 +765,7 @@ function MyObject(xx, yy, clientWidth, clientHeight, img, type, imgX, imgY) {
 
 	
 
-	this.update();
+	this.update();	
 }
 
 /* adds water objects to objectBlocks stack */
